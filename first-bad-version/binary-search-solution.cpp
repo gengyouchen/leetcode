@@ -15,6 +15,7 @@ private:
 		return first;
 	}
 public:
+	/* time: O(log(n)), space: O(1) */
 	int firstBadVersion(int n) {
 		return findFirstTrue(1, n, isBadVersion);
 	}
