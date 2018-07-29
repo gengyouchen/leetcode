@@ -22,6 +22,7 @@ private:
 		return A * B / gcd(A, B);
 	}
 public:
+	/* time: O(log(LONG_MAX)), space: O(1) */
 	int nthMagicalNumber(int N, int A, int B) {
 		return findFirstTrue(1L, LONG_MAX, [&](long ans) {
 			return ans / A + ans / B - ans / lcm(A, B) >= N;
