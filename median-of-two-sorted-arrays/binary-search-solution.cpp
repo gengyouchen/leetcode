@@ -24,9 +24,9 @@ public:
 		 * Do binary search for this answer as k1
 		 */
 		int k1 = findFirstTrue(0, m, [&](int k1) {
-				int k2 = k - k1;
-				return (k2 == 0) || (nums2[k2 - 1] <= nums1[k1]);
-				});
+			int k2 = k - k1;
+			return (k2 == 0) || (nums2[k2 - 1] <= nums1[k1]);
+		});
 		int k2 = k - k1;
 
 		int left = (k1 == 0) ? nums2[k2 - 1] : (k2 == 0) ? nums1[k1 - 1] : max(nums1[k1 - 1], nums2[k2 - 1]);
