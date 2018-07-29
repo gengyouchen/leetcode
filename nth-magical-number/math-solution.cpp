@@ -1,16 +1,5 @@
 class Solution {
 private:
-	template <class I, class F>
-	I findFirstTrue(I first, I last, F cond) {
-		while (first != last) {
-			I mid = first + (last - first) / 2;
-			if (cond(mid))
-				last = mid;
-			else
-				first = mid + 1;
-		}
-		return first;
-	}
 	/*
 	 * time: O(log(min(a,b))), space: O(1)
 	 * see CLRS textbook 31.2: Greatest common divisor
@@ -30,11 +19,27 @@ private:
 		return a / gcd(a, b) * b;
 	}
 public:
-	/* time: O(log(LONG_MAX)), space: O(1) */
+	/* time: O(A+B), space: O(1) */
 	int nthMagicalNumber(int N, int A, int B) {
-		long common = lcm(A, B);
-		return findFirstTrue(1L, LONG_MAX, [&](long ans) {
-			return (ans / A + ans / B - ans / common) >= N;
-		}) % 1000000007;
+		long LCM = lcm(A, B);
+		long nMagicPerLCM = LCM / A + LCM / B - 1;
+
+		long ans = (N / nMagicPerLCM) * LCM;
+		long ansNextA = ans + A;
+		long ansNextB = ans + B;
+		long nMagic = (N / nMagicPerLCM) * nMagicPerLCM;
+
+		while (nMagic < N)
+			if (ansNextA < ansNextB) {
+				ans = ansNextA;
+				ansNextA += A;
+				nMagic++;
+			} else {
+				ans = ansNextB;
+				ansNextB += B;
+				nMagic++;
+			}
+
+		return ans % 1000000007;
 	}
 };
