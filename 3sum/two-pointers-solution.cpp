@@ -1,12 +1,11 @@
 class Solution {
 private:
-	template <class I, class F>
-	void findTwoSum(I first, I last, int target, F found) {
+	template <class I, class T, class F>
+	void findTwoSum(I first, I last, T sum, F found) {
 		while (last - first > 1) {
-			int sum = *first + *(last - 1);
-			if (sum > target)
+			if (*first + *(last - 1) > sum)
 				--last;
-			else if (sum < target)
+			else if (*first + *(last - 1) < sum)
 				++first;
 			else
 				found(first, --last);
