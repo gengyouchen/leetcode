@@ -17,13 +17,12 @@ public:
 	vector<vector<int>> threeSum(vector<int>& nums) {
 		vector<vector<int>> ans;
 		sort(nums.begin(), nums.end());
-		for (auto z = nums.begin(); z != nums.end(); ++z) {
+		for (auto z = nums.begin(); z != nums.end(); ++z)
 			if (z == nums.end() - 1 || *z != *(z + 1))
 				twoSumSorted(nums.begin(), z, -*z, [&](auto x, auto y) {
 					if (ans.empty() || ans.back()[0] != *x || ans.back()[1] != *y)
 						ans.push_back({*x, *y, *z});
 				});
-		}
 		return ans;
 	}
 };
