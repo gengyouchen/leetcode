@@ -12,7 +12,7 @@ private:
 		}
 	}
 public:
-	/* time: O(n*log(n)), extra space: O(1) (i.e. does not count in input itself) */
+	/* time: O(n^2), extra space: O(1) (i.e. does not count in input itself) */
 	int threeSumClosest(vector<int>& nums, int target) {
 		int ans, distance = INT_MAX;
 		sort(nums.begin(), nums.end());
