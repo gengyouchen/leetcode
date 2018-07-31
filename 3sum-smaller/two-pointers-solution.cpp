@@ -13,7 +13,7 @@ private:
 		return ans;
 	}
 public:
-	/* time: O(n*log(n)), extra space: O(1) (i.e. does not count in input itself) */
+	/* time: O(n^2), extra space: O(1) (i.e. does not count in input itself) */
 	int threeSumSmaller(vector<int>& nums, int target) {
 		int ans = 0;
 		sort(nums.begin(), nums.end());
