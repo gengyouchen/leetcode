@@ -13,7 +13,7 @@ private:
 		}
 	}
 public:
-	/* time: O(n*log(n)), extra space: O(1) (i.e. does not count input & output) */
+	/* time: O(n*log(n)), extra space: O(1) (i.e. does not count in input/output itself) */
 	vector<vector<int>> threeSum(vector<int>& nums) {
 		vector<vector<int>> ans;
 		sort(nums.begin(), nums.end());
