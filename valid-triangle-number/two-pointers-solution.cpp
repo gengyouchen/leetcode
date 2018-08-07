@@ -13,12 +13,14 @@ private:
 		return ans;
 	}
 public:
-	/* time: O(n^2), extra space: O(1) (i.e. does not count in input itself) */
+	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input itself) */
 	int triangleNumber(vector<int>& nums) {
+		make_heap(nums.begin(), nums.end());
+		sort_heap(nums.begin(), nums.end());
 		int ans = 0;
-		sort(nums.begin(), nums.end());
-		for (auto it = nums.begin(); it != nums.end(); ++it)
-			ans += sortedTwoSumLarger(nums.begin(), it, *it);
+		for (auto z = nums.begin(); z != nums.end(); ++z)
+			/* Apply the triangle inequality */
+			ans += sortedTwoSumLarger(nums.begin(), z, *z);
 		return ans;
 	}
 };
