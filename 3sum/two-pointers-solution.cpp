@@ -13,16 +13,21 @@ private:
 		}
 	}
 public:
-	/* time: O(n^2), extra space: O(1) (i.e. does not count in input/output itself) */
+	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	vector<vector<int>> threeSum(vector<int>& nums) {
+		make_heap(nums.begin(), nums.end());
+		sort_heap(nums.begin(), nums.end());
 		vector<vector<int>> ans;
-		sort(nums.begin(), nums.end());
-		for (auto z = nums.begin(); z != nums.end(); ++z)
-			if (z == nums.end() - 1 || *z != *(z + 1))
-				sortedTwoSum(nums.begin(), z, -*z, [&](auto x, auto y) {
-					if (ans.empty() || ans.back()[0] != *x || ans.back()[1] != *y)
-						ans.push_back({*x, *y, *z});
-				});
+		for (auto z = nums.begin(); z != nums.end(); ++z) {
+			if (z != nums.end() - 1 && *z == *(z + 1))
+				continue; /* skip duplicates */
+			int complement = -*z;
+			sortedTwoSum(nums.begin(), z, complement, [&](auto x, auto y) {
+				if (!ans.empty() && ans.back()[0] == *x && ans.back()[1] == *y)
+					return; /* skip duplicates */
+				ans.push_back({*x, *y, *z});
+			});
+		}
 		return ans;
 	}
 };
