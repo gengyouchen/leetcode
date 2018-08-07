@@ -13,12 +13,15 @@ private:
 		return ans;
 	}
 public:
-	/* time: O(n^2), extra space: O(1) (i.e. does not count in input itself) */
+	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input itself) */
 	int threeSumSmaller(vector<int>& nums, int target) {
+		make_heap(nums.begin(), nums.end());
+		sort_heap(nums.begin(), nums.end());
 		int ans = 0;
-		sort(nums.begin(), nums.end());
-		for (auto it = nums.begin(); it != nums.end(); ++it)
-			ans += sortedTwoSumSmaller(nums.begin(), it, target - *it);
+		for (auto z = nums.begin(); z != nums.end(); ++z) {
+			int complement = target - *z;
+			ans += sortedTwoSumSmaller(nums.begin(), z, complement);
+		}
 		return ans;
 	}
 };
