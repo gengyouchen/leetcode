@@ -24,6 +24,11 @@ public:
 				else if (k == 1)
 					dp(k, n) = n;
 				else {
+					/*
+					 * T1(x) = dp(k - 1, x - 1) is monotonically increasing
+					 * T2(x) = dp(k, n - x) is monotonically decreasing
+					 * To minimize max(T1(x), T2(x)), do binary search for x
+					 */
 					int x = findFirstTrue(1, n, [&](auto x) {
 						return dp(k, n - x) <= dp(k - 1, x - 1);
 					});
