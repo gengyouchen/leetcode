@@ -1,22 +1,28 @@
 class Solution {
 private:
-	template <class I>
-	TreeNode* construct(I preorderFirst, I preorderLast, I inorderFirst, I inorderLast) {
-		if (preorderFirst == preorderLast)
+	typedef vector<int>::iterator I;
+public:
+	/* time: O(n), space: O(n) */
+	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+		if (preorder.empty())
 			return NULL;
 
-		I inorderRoot = find(inorderFirst, inorderLast, *preorderFirst);
-		int L = distance(inorderFirst, inorderRoot);
-		int R = distance(inorderRoot + 1, inorderLast);
+		unordered_map<int, I> val2inIter;
+		for (auto it = inorder.begin(); it != inorder.end(); ++it)
+			val2inIter[*it] = it;
 
-		TreeNode *root = new TreeNode(*preorderFirst++);
-		root->left = construct(preorderFirst, preorderFirst + L, inorderFirst, inorderFirst + L);
-		root->right = construct(preorderLast - R, preorderLast, inorderLast - R, inorderLast);
-		return root;
-	}
-public:
-	/* time: O(n^2), space: O(n) */
-	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-		return construct(preorder.begin(), preorder.end(), inorder.begin(), inorder.end());
+		function<TreeNode*(I, I, I, I)> dfs = [&](I preFirst, I preLast, I inFirst, I inLast) {
+			auto curr = new TreeNode(*preFirst++);
+			int lSize = distance(inFirst, val2inIter[curr->val]);
+			int rSize = distance(val2inIter[curr->val] + 1, inLast);
+
+			if (lSize > 0)
+				curr->left = dfs(preFirst, preFirst + lSize, inFirst, inFirst + lSize);
+			if (rSize > 0)
+				curr->right = dfs(preLast - rSize, preLast, inLast - rSize, inLast);
+			return curr;
+		};
+
+		return dfs(preorder.begin(), preorder.end(), inorder.begin(), inorder.end());
 	}
 };
