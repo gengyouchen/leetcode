@@ -1,5 +1,6 @@
 class Solution {
 public:
+	/* time: O(n), space: O(n) */
 	TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
 		if (pre.empty())
 			return NULL;
