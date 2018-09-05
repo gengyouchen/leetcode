@@ -1,24 +1,33 @@
 class Solution {
 private:
-	template <class I>
-	TreeNode* construct(I preorderFirst, I preorderLast, I postorderFirst, I postorderLast) {
-		if (preorderFirst == preorderLast)
+	typedef vector<int>::iterator I;
+	typedef unordered_map<int, I> H;
+	typedef function<TreeNode*(I, I, I, I)> F;
+public:
+	/* time: O(n), space: O(n) */
+	TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
+		if (pre.empty())
 			return NULL;
 
-		TreeNode *root = new TreeNode(*preorderFirst++);
-		if (preorderFirst != preorderLast) {
-			I postorderSplit = find(postorderFirst, --postorderLast, *preorderFirst) + 1;
-			int L = distance(postorderFirst, postorderSplit);
-			int R = distance(postorderSplit, postorderLast);
+		H val2postIter;
+		for (auto it = post.begin(); it != post.end(); ++it)
+			val2postIter[*it] = it;
 
-			root->left = construct(preorderFirst, preorderFirst + L, postorderFirst, postorderFirst + L);
-			root->right = construct(preorderLast - R, preorderLast, postorderLast - R, postorderLast);
-		}
-		return root;
-	}
-public:
-	/* time: O(n^2), space: O(n) */
-	TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
-		return construct(pre.begin(), pre.end(), post.begin(), post.end());
+		F dfs = [&](auto firstPre, auto lastPre, auto firstPost, auto lastPost) {
+			auto curr = new TreeNode(*firstPre);
+			if (distance(firstPre, lastPre) > 1) {
+				++firstPre, --lastPost;
+				int L = distance(firstPost, val2postIter[*firstPre] + 1);
+				int R = distance(firstPost, lastPost) - L;
+
+				if (L > 0)
+					curr->left = dfs(firstPre, firstPre + L, firstPost, firstPost + L);
+				if (R > 0)
+					curr->right = dfs(lastPre - R, lastPre, lastPost - R, lastPost);
+			}
+			return curr;
+		};
+
+		return dfs(pre.begin(), pre.end(), post.begin(), post.end());
 	}
 };
