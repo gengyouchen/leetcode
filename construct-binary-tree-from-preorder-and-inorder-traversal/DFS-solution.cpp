@@ -1,4 +1,6 @@
 class Solution {
+private:
+	typedef function<TreeNode*(TreeNode*)> F;
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
@@ -8,7 +10,11 @@ public:
 		auto preIter = preorder.begin();
 		auto inIter = inorder.begin();
 
-		function<TreeNode*(TreeNode*)> dfs = [&](auto inStop) {
+		/*
+		 * Propagate the successor link to mimic the threaded binary tree
+		 * in order to know when should we stop constructing the sub-tree
+		 */
+		F dfs = [&](auto succ) {
 			auto curr = new TreeNode(*preIter++);
 
 			if (*inIter != curr->val)
@@ -17,8 +23,8 @@ public:
 			assert(*inIter == curr->val);
 			++inIter;
 
-			if (inStop ? (*inIter != inStop->val) : (inIter != inorder.end()))
-				curr->right = dfs(inStop);
+			if (succ ? (*inIter != succ->val) : (inIter != inorder.end()))
+				curr->right = dfs(succ);
 
 			return curr;
 		};
