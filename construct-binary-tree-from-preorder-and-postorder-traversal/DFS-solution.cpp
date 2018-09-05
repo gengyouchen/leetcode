@@ -1,4 +1,6 @@
 class Solution {
+private:
+	typedef function<TreeNode*()> F;
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
@@ -8,7 +10,7 @@ public:
 		auto preIter = pre.begin();
 		auto postIter = post.begin();
 
-		function<TreeNode*()> dfs = [&]() {
+		F dfs = [&]() {
 			auto curr = new TreeNode(*preIter++);
 
 			if (*postIter != curr->val)
