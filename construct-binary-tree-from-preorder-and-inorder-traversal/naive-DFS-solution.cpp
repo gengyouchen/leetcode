@@ -1,25 +1,30 @@
 class Solution {
 private:
 	typedef vector<int>::iterator I;
+	typedef unordered_map<int, I> H;
+	typedef function<TreeNode*(I, I, I, I)> F;
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
 		if (preorder.empty())
 			return NULL;
 
-		unordered_map<int, I> val2inIter;
+		H val2inIter;
 		for (auto it = inorder.begin(); it != inorder.end(); ++it)
 			val2inIter[*it] = it;
 
-		function<TreeNode*(I, I, I, I)> dfs = [&](I preFirst, I preLast, I inFirst, I inLast) {
-			auto curr = new TreeNode(*preFirst++);
-			int lSize = distance(inFirst, val2inIter[curr->val]);
-			int rSize = distance(val2inIter[curr->val] + 1, inLast);
+		F dfs = [&](auto preFirst, auto preLast, auto inFirst, auto inLast) {
+			auto curr = new TreeNode(*preFirst);
+			if (distance(preFirst, preLast) > 1) {
+				++preFirst;
+				int L = distance(inFirst, val2inIter[curr->val]);
+				int R = distance(inFirst, inLast) - L - 1;
 
-			if (lSize > 0)
-				curr->left = dfs(preFirst, preFirst + lSize, inFirst, inFirst + lSize);
-			if (rSize > 0)
-				curr->right = dfs(preLast - rSize, preLast, inLast - rSize, inLast);
+				if (L > 0)
+					curr->left = dfs(preFirst, preFirst + L, inFirst, inFirst + L);
+				if (R > 0)
+					curr->right = dfs(preLast - R, preLast, inLast - R, inLast);
+			}
 			return curr;
 		};
 
