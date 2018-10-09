@@ -1,5 +1,6 @@
 class Solution {
 public:
+	/* time: O(n), space: O(1) */
 	ListNode* reverseList(ListNode* head) {
 		ListNode *buf = NULL;
 		while (head) {
