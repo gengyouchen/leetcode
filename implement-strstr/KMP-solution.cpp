@@ -14,7 +14,7 @@ private:
 		 *                        L+1       R=14
 		 *
 		 * Because '9' != 'b', we cannot ++L anymore
-		 * However, we do NOT need restart L from -1
+		 * However, we do NOT need to restart L=-1
 		 *
 		 *                                   ===
 		 *                                     ===
@@ -23,7 +23,7 @@ private:
 		 *                                     L R=4
 		 *
 		 *                        ===        ===
-		 * L can start from 2, s="ababa9487ababab..."
+		 * We can restart L=2, s="ababa9487ababab..."
 		 *                           ^          ^
 		 *                          L+1         R
 		 *
