@@ -1,5 +1,6 @@
 class Solution {
 public:
+	/* O(len(needle) + len(haystack)) time, O(len(needle)) space */
 	int strStr(const string& haystack, const string& needle) {
 		if (needle.empty())
 			return 0;
