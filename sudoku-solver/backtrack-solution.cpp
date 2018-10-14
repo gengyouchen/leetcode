@@ -1,3 +1,9 @@
+/*
+ * This backtracking solution is based on Constraint Propagation,
+ * and is inspired by Peter Norvig, Director of Research in Google.
+ *
+ * For explanations, see his webpage: http://norvig.com/sudoku.html
+ */
 static array<unordered_set<int>, 81> cell2units;
 static array<unordered_set<int>, 27> unit2cells;
 static array<unordered_set<int>, 81> cell2peers;
