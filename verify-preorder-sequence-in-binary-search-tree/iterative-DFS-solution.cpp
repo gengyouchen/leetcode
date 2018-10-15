@@ -2,7 +2,7 @@ class Solution {
 public:
 	/* time: O(n), space: O(n) */
 	bool verifyPreorder(vector<int>& preorder) {
-		/*  
+		/*
 		 * Track the successor link to mimic the threaded binary tree
 		 * in order to know when should we stop traversing the sub-tree
 		 *

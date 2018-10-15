@@ -6,7 +6,7 @@ public:
 	bool verifyPreorder(vector<int>& preorder) {
 		auto it = preorder.begin();
 
-		/*  
+		/*
 		 * Propagate the successor link to mimic the threaded binary tree
 		 * in order to know when should we stop traversing the sub-tree
 		 *
