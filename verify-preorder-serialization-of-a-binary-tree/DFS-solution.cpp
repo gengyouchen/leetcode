@@ -6,7 +6,7 @@ public:
 	bool isValidSerialization(const string& preorder) {
 		auto it = preorder.begin();
 		F dfs = [&]() {
-			/* check if serialization is too short */ 
+			/* check if serialization is too short */
 			if (it == preorder.end())
 				return false;
 
@@ -26,7 +26,7 @@ public:
 			return true;
 		};
 
-		/* serialization is not too short && not too long */ 
+		/* serialization is not too short && not too long */
 		return dfs() && (it == preorder.end());
 	}
 };
