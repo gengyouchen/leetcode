@@ -37,7 +37,7 @@ public:
 
 			if (R != n - 1)
 				rollingHash = mod((rollingHash - haystack[L] * w) * 256 + haystack[R + 1]);
-		} 
+		}
 		return -1; /* not found */
 	}
 };
