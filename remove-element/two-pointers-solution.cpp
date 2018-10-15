@@ -2,13 +2,13 @@ class Solution {
 public:
 	/* time: O(n), space: O(1) */
 	int removeElement(vector<int>& nums, int val) {
-		auto it = nums.begin(), removed = nums.end();
-		while (it != removed) {
+		auto it = nums.begin(), last = nums.end();
+		while (it != last) {
 			if (*it == val)
-				*it = *--removed;
+				*it = *--last;
 			else
 				++it;
 		}
-		return distance(nums.begin(), removed);
+		return distance(nums.begin(), last);
 	}
 };
