@@ -33,12 +33,12 @@ private:
 			}
 		}
 		return r;
-	}    
+	}
 public:
 	/* time: O(n), space: O(n) */
 	string longestPalindrome(const string& s) {
 		auto r = manacher(s);
-		int c = max_element(r.begin(), r.end()) - r.begin();
+		int c = distance(r.begin(), max_element(r.begin(), r.end()));
 
 		int L = (c - r[c] + 2) / 2;
 		int R = (c + r[c] - 2) / 2;
