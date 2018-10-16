@@ -5,8 +5,8 @@ private:
 		auto extend = [&](int i) {
 			while (i - r[i] >= 0 && i + r[i] < r.size()) {
 				if ((i - r[i]) % 2) {
-					int L = (i - r[i]) / 2;
-					int R = (i + r[i]) / 2;
+					const int L = (i - r[i]) / 2;
+					const int R = (i + r[i]) / 2;
 					if (s[L] != s[R])
 						break;
 				}
@@ -15,12 +15,12 @@ private:
 		};
 
 		int c = 0;
-		for (int i = 0; i < r.size(); ++i) {
+		for (int i = 0; i < r.size(); ++i)
 			if (i >= c + r[c]) {
 				extend(i);
 				c = i;
 			} else {
-				int j = c - (i - c);
+				const int j = c - (i - c); /* mirrored i */
 				if (i + r[j] > c + r[c])
 					r[i] = c + r[c] - i;
 				else if (i + r[j] < c + r[c])
@@ -31,17 +31,16 @@ private:
 					c = i;
 				}
 			}
-		}
 		return r;
 	}
 public:
 	/* time: O(n), space: O(n) */
 	string longestPalindrome(const string& s) {
 		auto r = manacher(s);
-		int c = distance(r.begin(), max_element(r.begin(), r.end()));
+		const int c = distance(r.begin(), max_element(r.begin(), r.end()));
 
-		int L = (c - r[c] + 2) / 2;
-		int R = (c + r[c] - 2) / 2;
+		const int L = (c - r[c] + 2) / 2;
+		const int R = (c + r[c] - 2) / 2;
 		return s.substr(L, R - L + 1);
 	}
 };
