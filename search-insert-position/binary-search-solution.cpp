@@ -13,7 +13,7 @@ private:
 	}
 public:
 	/* time: O(log(n)), space: O(1) */
-	int searchInsert(vector<int>& nums, int target) {
+	int searchInsert(const vector<int>& nums, int target) {
 		return findFirstTrue(nums.begin(), nums.end(), [&](auto it) {
 			return *it >= target;
 		}) - nums.begin();
