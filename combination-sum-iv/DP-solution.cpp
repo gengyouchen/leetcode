@@ -3,9 +3,9 @@ public:
 	/*
 	 * time: O(target * len(nums)), space: O(target)
 	 *
-	 * Strictly speaking, this problem should not be named as "Combination" Sum
+	 * Strictly speaking, this problem should not be named as the "Combination" Sum
 	 * because different sequences are counted as different combinations.
-	 * We better called this problem "Permutation" Sum.
+	 * This problem is actually the "Permutation" Sum.
 	 *
 	 * For the real "Combination" Sum problem, see LeetCode 518 - Coin Change 2
 	 */
