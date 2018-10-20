@@ -4,10 +4,9 @@ private:
 	typedef vector<V1D> V2D;
 	typedef V1D::reference R;
 public:
-	/* time: O(S*P), space: O(P) */
+	/* time: O(len(s) * len(p)), space: O(len(p)) */
 	bool isMatch(const string& s, const string& p) {
-		const int m = s.size();
-		const int n = p.size();
+		const int m = s.size(), n = p.size();
 		auto _dp = V2D(2, V1D(n + 1, false));
 		auto dp = [&](int i, int j) -> R { return _dp[i % 2][j]; };
 
@@ -15,23 +14,20 @@ public:
 			for (int j = n; j >= 0; --j) {
 				if (j < n && p[j] == '*')
 					continue; /* not a valid DP state */
+				const bool withStar = (j + 1 < n) && (p[j + 1] == '*');
 
-				bool isEmptySi = (i == m);
-				bool isEmptyPj = (j == n);
-				bool isPjWithStar = (j + 1 < n) && (p[j + 1] == '*');
-
-				if (isEmptySi && isEmptyPj)
+				if ((i == m) && (j == n))
 					dp(i, j) = true;
-				else if (isEmptySi)
-					dp(i, j) = isPjWithStar && dp(i, j + 2);
-				else if (isEmptyPj)
+				else if (i == m)
+					dp(i, j) = withStar && dp(i, j + 2);
+				else if (j == n)
 					dp(i, j) = false;
 				else {
-					bool isPjMatched = (p[j] == s[i]) || (p[j] == '.');
-					if (isPjWithStar)
-						dp(i, j) = (isPjMatched && dp(i + 1, j)) || dp(i, j + 2);
+					const bool matched = (p[j] == s[i]) || (p[j] == '.');
+					if (withStar)
+						dp(i, j) = (matched && dp(i + 1, j)) || dp(i, j + 2);
 					else
-						dp(i, j) = isPjMatched && dp(i + 1, j + 1);
+						dp(i, j) = matched && dp(i + 1, j + 1);
 				}
 			}
 		return dp(0, 0);
