@@ -4,7 +4,7 @@ private:
 	typedef function<void(I, I, int)> F;
 public:
 	/*
-	 * time: O(k * C(k + s, k)), space: O(k),
+	 * time: O(k * C(k + s, k)), space: O(k) auxiliary (i.e. does not count output itself)
 	 * where k = target / min(candidates), s = len(candidates)
 	 */
 	vector<vector<int>> combinationSum(const vector<int>& candidates, int target) {
