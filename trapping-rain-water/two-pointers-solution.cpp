@@ -1,19 +1,14 @@
 class Solution {
 public:
 	/* time: O(n), space: O(1) */
-	int trap(vector<int>& height) {
-		int outsideTrapLevel = 0, ans = 0;
-		auto L = height.begin(), R = height.end(); /* inside area: [L, R) */
-		while (L != R)
-			if (*L < *(R - 1)) {
-				outsideTrapLevel = max(outsideTrapLevel, *L);
-				ans += outsideTrapLevel - *L;
-				++L;
-			} else {
-				outsideTrapLevel = max(outsideTrapLevel, *(R - 1));
-				ans += outsideTrapLevel - *(R - 1);
-				--R;
-			}
+	int trap(const vector<int>& height) {
+		int globalThreshold = 0, ans = 0;
+		auto L = height.begin(), R = height.end();
+		while (L != R) {
+			int localThreshold = (*L < *(R - 1)) ? (*L++) : (*--R);
+			globalThreshold = max(globalThreshold, localThreshold);
+			ans += globalThreshold - localThreshold;
+		}
 		return ans;
 	}
 };
