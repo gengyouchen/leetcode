@@ -5,7 +5,7 @@ public:
 		int globalThreshold = 0, ans = 0;
 		auto L = height.begin(), R = height.end();
 		while (L != R) {
-			int localThreshold = (*L < *(R - 1)) ? (*L++) : (*--R);
+			const int localThreshold = (*L < *(R - 1)) ? (*L++) : (*--R);
 			globalThreshold = max(globalThreshold, localThreshold);
 			ans += globalThreshold - localThreshold;
 		}
