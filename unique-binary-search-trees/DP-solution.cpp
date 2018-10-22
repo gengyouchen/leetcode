@@ -1,17 +1,21 @@
 class Solution {
 public:
-	/* time: O(n^2), space: O(n) */
+	/*
+	 * time: O(n^2), space: O(n)
+	 *
+	 * The recursive definition of numTrees is:
+	 * numTrees(0) = 1
+	 * numTrees(n + 1) = sum { numTrees(i) * numTrees(n - i) for all i <= n }
+	 *
+	 * This is exactly the same recursive definition of the Catalan number
+	 */
 	int numTrees(int n) {
 		int ans = 0;
-		vector<int> dp(n + 1);
-		dp[0] = dp[1] = 1;
-		for (int i = 2; i <= n; ++i) {
-			dp[i] = 0;
-			for (int L = 0; L <= i; ++L) {
-				const int R = i - L - 1;
-				dp[i] += dp[L] * dp[R];
-			}
-		}
-		return dp[n];
+		vector<int> Catalan(n + 1, 0);
+		Catalan[0] = 1;
+		for (int k = 0; k < n; ++k)
+			for (int i = 0; i <= k; ++i)
+				Catalan[k + 1] += Catalan[i] * Catalan[k - i];
+		return Catalan[n];
 	}
 };
