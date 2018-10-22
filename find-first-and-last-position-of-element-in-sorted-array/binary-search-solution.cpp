@@ -16,9 +16,9 @@ public:
 	vector<int> searchRange(const vector<int>& nums, int target) {
 		auto L = nums.begin(), R = nums.end();
 		L = findFirstTrue(L, R, [&](auto it) { return *it >= target; });
-		if (L == nums.end() || *L != target)
-			return {-1, -1};
 		R = findFirstTrue(L, R, [&](auto it) { return *it > target; });
+		if (L == R)
+			return {-1, -1};
 		return {distance(nums.begin(), L), distance(nums.begin(), R - 1)};
 	}
 };
