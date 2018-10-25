@@ -1,4 +1,5 @@
 class Solution {
+private:
 	typedef vector<TreeNode*> Roots;
 	typedef vector<Roots> V1D;
 	typedef vector<V1D> V2D;
@@ -29,8 +30,16 @@ public:
 		};
 
 		/*
-		 * time: O(Catalan(n) + 2*Catalan(n-1) + 3*Catalan(n-2) + 4*Catalan(n-3) + 5*Catalan(n-4) + 6*Catalan(n-5)...)
-		 *       <= O(Catalan(n) + 3*Catalan(n)) = O(Catalan(n))
+		 * time: O(1*Catalan(n) + 2*Catalan(n-1) + 3*Catalan(n-2) + 4*Catalan(n-3) + 5*Catalan(n-4) + 6*Catalan(n-5)...)
+		 *         ^              ^                ^                ^                ^                ^
+		 *         dp[1][n]       dp[1][n-1]       dp[1][n-2]       dp[1][n-3]       dp[1][n-4]       dp[1][n-5]
+		 *                        dp[2][n]         dp[2][n-1]       dp[2][n-2]       dp[2][n-3]       dp[2][n-4]
+		 *                                         dp[3][n]         dp[3][n-1]       dp[3][n-2]       dp[3][n-3]
+		 *                                                          dp[4][n]         dp[4][n-1]       dp[4][n-2]
+		 *                                                                           dp[5][n]         dp[5][n-1]
+		 *                                                                                            dp[6][n]
+		 *       <= O(1*Catalan(n) + 3*Catalan(n)) ... see the proof below
+		 *        = O(Catalan(n))
 		 *
 		 * <Proof>
 		 * Recall the recursive definition of Catalan number:
@@ -47,4 +56,3 @@ public:
 		return dp[1][n];
 	}
 };
-static int x = []() { ios::sync_with_stdio(false); cin.tie(NULL); return 0; }();
