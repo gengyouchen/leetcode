@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(R*C), space: O(1) (i.e. does not count output itself) */
+	/* time: O(R*C), space: O(1) auxiliary (i.e. does not count output itself) */
 	vector<vector<int>> spiralMatrixIII(int R, int C, int r0, int c0) {
 		vector<vector<int>> ans;
 		int len = 1;
