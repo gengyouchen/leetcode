@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(m*n), space: O(1) (i.e. does not count output itself) */
+	/* time: O(m*n), space: O(1) auxiliary (i.e. does not count output itself) */
 	vector<int> spiralOrder(const vector<vector<int>>& matrix) {
 		vector<int> ans;
 		if (matrix.empty())
