@@ -19,7 +19,7 @@ public:
 					else if (b >= nums.front())
 						return false; /* let b = -INFINITY, so a < b is false */
 				}
-				return a < b;
+			return a < b;
 		});
 		return (it != nums.end() && *it == target) ? distance(nums.begin(), it) : -1;
 	}
