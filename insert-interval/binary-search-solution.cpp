@@ -1,22 +1,22 @@
 class Solution {
 private:
-	template <class I, class F>
-	I findFirstTrue(I first, I last, F cond) {
-		while (first != last) {
-			I mid = first + (last - first) / 2;
-			if (cond(mid))
-				last = mid;
+	template <class T, class F>
+	T lowestTrue(T min, T max, F cond) {
+		while (min < max) {
+			auto it = min + (max - min) / 2;
+			if (cond(it) == true)
+				max = it;
 			else
-				first = mid + 1;
+				min = it + 1;
 		}
-		return first;
+		return min;
 	}
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
 		auto L = intervals.begin(), R = intervals.end();
-		L = findFirstTrue(L, R, [&](auto it) { return !(it->end < newInterval.start); });
-		R = findFirstTrue(L, R, [&](auto it) { return it->start > newInterval.end; });
+		L = lowestTrue(L, R, [&](auto it) { return !(it->end < newInterval.start); });
+		R = lowestTrue(L, R, [&](auto it) { return it->start > newInterval.end; });
 		if (L == R)
 			intervals.insert(L, newInterval);
 		else {
