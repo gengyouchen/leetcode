@@ -3,20 +3,20 @@ bool isBadVersion(int version);
 
 class Solution {
 private:
-	template <class I, class F>
-	I findFirstTrue(I first, I last, F cond) {
-		while (first != last) {
-			I mid = first + (last - first) / 2;
-			if (cond(mid))
-				last = mid;
+	template <class T, class F>
+	T lowestTrue(T min, T max, F cond) {
+		while (min < max) {
+			auto it = min + (max - min) / 2;
+			if (cond(it) == true)
+				max = it;
 			else
-				first = mid + 1;
+				min = it + 1;
 		}
-		return first;
+		return min;
 	}
 public:
 	/* time: O(log(n)), space: O(1) */
 	int firstBadVersion(int n) {
-		return findFirstTrue(1, n, isBadVersion);
+		return lowestTrue(1, n, [](int i) { return isBadVersion(i); });
 	}
 };
