@@ -21,6 +21,7 @@ private:
 		return dummy.next;
 	}
 public:
+	/* time: O(n*log(n)), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	ListNode* sortList(ListNode* head) {
 		const int n = countList(head);
 		for (int step = 1; step < n; step *= 2) {
