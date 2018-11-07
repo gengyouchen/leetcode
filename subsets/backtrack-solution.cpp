@@ -1,13 +1,13 @@
 class Solution {
 private:
-	typedef vector<int>::iterator I;
+	typedef vector<int>::const_iterator I;
 	typedef function<void(I, I)> F;
 public:
 	/*
-	 * time: O(n * (2 ^ n)), space: O(n) auxiliary (i.e. does not count input & output itself),
+	 * time: O(n * (2 ^ n)), space: O(n) auxiliary (i.e. does not count output itself),
 	 * where n = len(nums)
 	 */
-	vector<vector<int>> subsets(vector<int>& nums) {
+	vector<vector<int>> subsets(const vector<int>& nums) {
 		vector<vector<int>> ans;
 		vector<int> buf;
 		F backtrack = [&](auto first, auto last) {
