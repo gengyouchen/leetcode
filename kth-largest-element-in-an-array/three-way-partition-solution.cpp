@@ -25,7 +25,7 @@ public:
 		auto first = nums.begin(), last = nums.end();
 		const auto target = nums.begin() + (k - 1);
 		while (last - first > 1) {
-			auto it = partition3(first, last);
+			const auto it = partition3(first, last);
 			if (target < it.first)
 				last = it.first;
 			else if (target >= it.second)
