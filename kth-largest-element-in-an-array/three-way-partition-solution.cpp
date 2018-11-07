@@ -3,7 +3,7 @@ private:
 	enum Color { RED = 0, WHITE = 1, BLUE = 2 };
 	template <class I>
 	auto partition3(I first, I last) {
-		auto pivot = *(first + rand() % (last - first));
+		const auto pivot = *(first + rand() % (last - first));
 		auto color = [&](auto it) { return (*it > pivot) ? RED : (*it == pivot) ? WHITE : BLUE; };
 		/*
 		 * This is exactly the Dutch National Flag (DNF) problem by Edsger Dijkstra
@@ -23,7 +23,7 @@ public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	int findKthLargest(vector<int>& nums, int k) {
 		auto first = nums.begin(), last = nums.end();
-		auto target = nums.begin() + (k - 1);
+		const auto target = nums.begin() + (k - 1);
 		while (last - first > 1) {
 			auto it = partition3(first, last);
 			if (target < it.first)
