@@ -10,11 +10,11 @@ public:
 		const int median = *mid;
 
 		auto A = [&](int i) -> int& { return nums[(i * 2 + 1) % (n | 1)]; };
+		auto color = [&](int i) { return (A(i) > median) ? RED : (A(i) == median) ? WHITE : BLUE; };
 		/*
 		 * This is exactly the Dutch National Flag (DNF) problem by Edsger Dijkstra
 		 * See LeetCode 75 - Sort Colors
 		 */
-		auto color = [&](int i) { return (A(i) > median) ? RED : (A(i) == median) ? WHITE : BLUE; };
 		int iLastRed = 0, i = iLastRed, iFirstBlue = n;
 		while (i != iFirstBlue) {
 			if (color(i) == RED)
