@@ -31,7 +31,7 @@ private:
 	}
 public:
 	/*
-	 * time: O(m * (1 + log(n)/2 - log(m))), space: O(log(m, n)),
+	 * time: O(m * (1 + log(n) - log(m))), space: O(log(m, n)),
 	 * where m = min(nRow, nCol), n = max(nRow, nCol)
 	 *
 	 * <Proof>
@@ -44,19 +44,21 @@ public:
 	 *         = T(1, n/m) + c*sum{2^k * (log(n) - log(2^k))}
 	 *         = T(1, n/m) + c*sum{2^k * (log(n) - k)}
 	 *         = T(1, n/m) + c*(log(n)*sum{2^k} - sum{k * 2^k})
+	 *         where 0 <= k <= log(m)
 	 *
 	 * To calculate sum{2^k} and sum{k * 2^k}, use the Geometric Progression's formulas
 	 * (see https://en.wikipedia.org/wiki/Geometric_progression#Related_formulas)
-	 * sum{2^k} = 1*(1 - 2^log(m))/(1 - 2) = m
-	 * sum{k * 2^(k-1)} = (1 - 2^(log(m)+1)) / (1-2)^2 - (log(m)+1) * 2^(log(m)) / (1-2)
-	 *                  = (1 - 2*m) + (log(m)+1) * m
-	 *                  = 1 - m + m*log(m)
+	 * sum{2^k} = (1 - 2^(log(m)+1)) / (1 - 2) = 2*m - 1
+	 * sum{k * 2^k} = 2*sum{k * 2^(k-1)}
+	 *              = 2*((1 - 2^(log(m)+1)) / (1-2)^2 - (log(m)+1) * 2^(log(m)) / (1-2))
+	 *              = 2*((1 - 2*m) + (log(m)+1) * m)
+	 *              = 2*(1 - m + m*log(m))
 	 *
 	 * Therefore,
 	 * T(m, n) = T(1, n/m) + c*(log(n)*sum{2^k} - sum{k * 2^k})
-	 *         = T(1, n/m) + c*(log(n)*m - 2*(1 - m + m*log(m)))
-	 *         = T(1, n/m) + c*(2*m + m*(log(n) - 2*log(m)) - 2)
-	 *         = O(m * (1 + log(n)/2 - log(m)))
+	 *         = T(1, n/m) + c*(log(n)*(2*m - 1) - 2*(1 - m + m*log(m)))
+	 *         = T(1, n/m) + c*(2*m + 2*m*(log(n) - log(m)) - log(n) - 2)
+	 *         = O(m * (1 + log(n) - log(m)))
 	 */
 	bool searchMatrix(const vector<vector<int>>& matrix, int target) {
 		const int m = matrix.size();
