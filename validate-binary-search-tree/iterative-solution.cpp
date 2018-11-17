@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(n) time, space: O(n) auxiliary (i.e. does not count output itself) */
+	/* time: O(n), space: O(n) */
 	bool isValidBST(const TreeNode* root) {
 		const TreeNode* prev = NULL;
 		stack<const TreeNode*> succ; /* store successors to mimic threaded binary trees */
