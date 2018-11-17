@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(n) time, space: O(1) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	void recoverTree(TreeNode* root) {
 		TreeNode *prev = NULL, *wrong1 = NULL, *wrong2 = NULL;
 		/*

@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(n) time, space: O(n) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n), space: O(n) */
 	void recoverTree(TreeNode* root) {
 		TreeNode *prev = NULL, *wrong1 = NULL, *wrong2 = NULL;
 		stack<TreeNode*> succ; /* store successors to mimic threaded binary trees */

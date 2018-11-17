@@ -2,7 +2,7 @@ class Solution {
 private:
 	typedef function<void(TreeNode*)> F;
 public:
-	/* time: O(n) time, space: O(n) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n), space: O(n) */
 	void recoverTree(TreeNode* root) {
 		TreeNode *prev = NULL, *wrong1 = NULL, *wrong2 = NULL;
 		F dfs = [&](auto p) {
