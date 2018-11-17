@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(n) time, space: O(1) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
 	vector<int> inorderTraversal(TreeNode* root) {
 		vector<int> ans;
 		/* Use the "Morris Traversal" method to mimic the threaded binary tree */

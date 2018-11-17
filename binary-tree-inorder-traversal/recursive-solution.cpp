@@ -2,7 +2,7 @@ class Solution {
 private:
 	typedef function<void(const TreeNode*)> F;
 public:
-	/* time: O(n) time, space: O(n) auxiliary (i.e. does not count output itself) */
+	/* time: O(n), space: O(n) */
 	vector<int> inorderTraversal(const TreeNode* root) {
 		vector<int> ans;
 		F dfs = [&](auto p) {
