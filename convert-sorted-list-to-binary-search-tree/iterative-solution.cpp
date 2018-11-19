@@ -1,50 +1,35 @@
 class Solution {
 private:
 	typedef TreeNode* T;
+	typedef pair<T, int> P;
+	typedef stack<P> S;
 	int countList(const ListNode* head) {
 		int len = 0;
 		while (head)
 			head = head->next, ++len;
 		return len;
 	}
-	T allocCompleteBST(int n) {
-		T root = new TreeNode(1), ans = root;
-		auto L = [&](T x) -> T& {
-			const int idx = x->val * 2;
-			if (!x->left && idx <= n)
-				x->left = new TreeNode(idx);
-			return x->left;
-		};
-		auto R = [&](T x) -> T& {
-			const int idx = x->val * 2 + 1;
-			if (!x->right && idx <= n)
-				x->right = new TreeNode(idx);
-			return x->right;
-		};
-		stack<T> succ; /* store successors to mimic threaded binary trees */
-		while (root || !succ.empty())
-			if (root)
-				succ.push(root), root = L(root);
-			else {
-				root = succ.top(), succ.pop();
-				root = R(root);
-			}
-		return ans;
-	}
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* sortedListToBST(const ListNode* head) {
 		if (!head)
 			return NULL;
-		T root = allocCompleteBST(countList(head)), ans = root;
-		stack<T> succ; /* store successors to mimic threaded binary trees */
+
+		/* Imagine that we have a complete binary tree with n nodes */
+		const int n = countList(head);
+		auto L = [&](T p, int i) { if (!p->left && i * 2 <= n) p->left = new TreeNode(0); return p->left; };
+		auto R = [&](T p, int i) { if (!p->right && i * 2 + 1 <= n) p->right = new TreeNode(0); return p->right; };
+
+		T root = new TreeNode(0), ans = root;
+		int i = 1;
+		S succ; /* store successors to mimic threaded binary trees */
 		while (root || !succ.empty())
 			if (root)
-				succ.push(root), root = root->left;
+				succ.emplace(root, i), root = L(root, i), i = i * 2;
 			else {
-				root = succ.top(), succ.pop();
-				root->val = head->val;
-				head = head->next, root = root->right;
+				root = succ.top().first, i = succ.top().second, succ.pop();
+				root->val = head->val, head = head->next;
+				root = R(root, i), i = i * 2 + 1;
 			}
 		return ans;
 	}

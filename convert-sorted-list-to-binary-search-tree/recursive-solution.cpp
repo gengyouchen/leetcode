@@ -1,50 +1,34 @@
 class Solution {
 private:
 	typedef TreeNode* T;
-	typedef function<void(T)> F;
+	typedef function<void(T, int)> F;
 	int countList(const ListNode* head) {
 		int len = 0;
 		while (head)
 			head = head->next, ++len;
 		return len;
 	}
-	T allocCompleteBST(int n) {
-		T root = new TreeNode(1), ans = root;
-		auto L = [&](T x) -> T& {
-			const int idx = x->val * 2;
-			if (!x->left && idx <= n)
-				x->left = new TreeNode(idx);
-			return x->left;
-		};
-		auto R = [&](T x) -> T& {
-			const int idx = x->val * 2 + 1;
-			if (!x->right && idx <= n)
-				x->right = new TreeNode(idx);
-			return x->right;
-		};
-		F dfs = [&](auto p) {
-			if (p) {
-				dfs(L(p));
-				dfs(R(p));
-			}
-		};
-		dfs(root);
-		return ans;
-	}
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* sortedListToBST(const ListNode* head) {
 		if (!head)
 			return NULL;
-		T root = allocCompleteBST(countList(head)), ans = root;
-		F dfs = [&](auto p) {
+
+		/* Imagine that we have a complete binary tree with n nodes */
+		const int n = countList(head);
+		auto L = [&](T p, int i) { if (!p->left && i * 2 <= n) p->left = new TreeNode(0); return p->left; };
+		auto R = [&](T p, int i) { if (!p->right && i * 2 + 1 <= n) p->right = new TreeNode(0); return p->right; };
+
+		T root = new TreeNode(0), ans = root;
+		int i = 1;
+		F dfs = [&](auto p, int i) {
 			if (p) {
-				dfs(p->left);
+				dfs(L(p, i), i * 2);
 				p->val = head->val, head = head->next;
-				dfs(p->right);
+				dfs(R(p, i), i * 2 + 1);
 			}
 		};
-		dfs(root);
+		dfs(root, 1);
 		return ans;
 	}
 };

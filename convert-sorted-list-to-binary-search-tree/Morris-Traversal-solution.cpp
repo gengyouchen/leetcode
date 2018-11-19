@@ -7,64 +7,42 @@ private:
 			head = head->next, ++len;
 		return len;
 	}
-	T allocCompleteBST(int n) {
-		T root = new TreeNode(1), ans = root;
-		auto L = [&](T x) -> T& {
-			const int idx = x->val * 2;
-			if (!x->left && idx <= n)
-				x->left = new TreeNode(idx);
-			return x->left;
-		};
-		auto R = [&](T x) -> T& {
-			const int idx = x->val * 2 + 1;
-			if (!x->right && idx <= n)
-				x->right = new TreeNode(idx);
-			return x->right;
-		};
-		/*
-		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
-		 * See LeetCode 94 - Binary Tree Inorder Traversal
-		 */
-		while (root) {
-			if (L(root)) {
-				auto pred = L(root);
-				while (R(pred) && R(pred) != root)
-					pred = R(pred);
-				if (!R(pred)) {
-					R(pred) = root;
-					root = L(root);
-					continue;
-				}
-				R(pred) = NULL;
-			}
-			root = R(root);
-		}
-		return ans;
-	}
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count output itself) */
 	TreeNode* sortedListToBST(const ListNode* head) {
 		if (!head)
 			return NULL;
-		T root = allocCompleteBST(countList(head)), ans = root;
+
+		/* Imagine that we have a complete binary tree with n nodes */
+		const int n = countList(head);
+		auto L = [&](T p, int i) -> T& { if (!p->left && i * 2 <= n) p->left = new TreeNode(0); return p->left; };
+		auto R = [&](T p, int i) -> T& { if (!p->right && i * 2 + 1 <= n) p->right = new TreeNode(0); return p->right; };
+
+		T root = new TreeNode(0), ans = root;
+		int i = 1, depth = 1;
 		/*
 		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
 		 * See LeetCode 94 - Binary Tree Inorder Traversal
+		 *     LeetCode 104 - Maximum Depth of Binary Tree
+		 *     LeetCode 111 - Minimum Depth of Binary Tree
 		 */
 		while (root) {
-			if (root->left) {
-				auto pred = root->left;
-				while (pred->right && pred->right != root)
-					pred = pred->right;
-				if (!pred->right) {
-					pred->right = root;
-					root = root->left;
+			if (L(root, i)) {
+				auto pred = L(root, i);
+				int j = i * 2, deltaDepth = 1; /* between root and pred */
+				while (R(pred, j) && R(pred, j) != root)
+					pred = R(pred, j), j = j * 2 + 1, ++deltaDepth;
+				if (!R(pred, j)) {
+					R(pred, j) = root;
+					root = L(root, i), i = i * 2, ++depth;
 					continue;
 				}
-				pred->right = NULL;
+				R(pred, j) = NULL;
+				i /= 2, --depth; /* rollback to pred's depth */
+				i >>= deltaDepth, depth -= deltaDepth;
 			}
-			root->val = head->val;
-			head = head->next, root = root->right;
+			root->val = head->val, head = head->next;
+			root = R(root, i), i = i * 2 + 1, ++depth;
 		}
 		return ans;
 	}
