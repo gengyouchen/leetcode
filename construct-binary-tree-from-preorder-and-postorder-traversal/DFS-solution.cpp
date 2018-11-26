@@ -3,13 +3,10 @@ private:
 	typedef function<TreeNode*()> F;
 public:
 	/* time: O(n), space: O(n) */
-	TreeNode* constructFromPrePost(vector<int>& pre, vector<int>& post) {
+	TreeNode* constructFromPrePost(const vector<int>& pre, const vector<int>& post) {
 		if (pre.empty())
 			return NULL;
-
-		auto preIter = pre.begin();
-		auto postIter = post.begin();
-
+		auto preIter = pre.begin(), postIter = post.begin();
 		F dfs = [&]() {
 			auto curr = new TreeNode(*preIter++);
 
@@ -24,7 +21,6 @@ public:
 
 			return curr;
 		};
-
 		return dfs();
 	}
 };
