@@ -3,13 +3,10 @@ private:
 	typedef function<TreeNode*(TreeNode*)> F;
 public:
 	/* time: O(n), space: O(n) */
-	TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+	TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder) {
 		if (preorder.empty())
 			return NULL;
-
-		auto preIter = preorder.begin();
-		auto inIter = inorder.begin();
-
+		auto preIter = preorder.begin(), inIter = inorder.begin();
 		/*
 		 * Propagate the successor link to mimic the threaded binary tree
 		 * in order to know when should we stop constructing the sub-tree
@@ -28,7 +25,6 @@ public:
 
 			return curr;
 		};
-
 		return dfs(NULL);
 	}
 };
