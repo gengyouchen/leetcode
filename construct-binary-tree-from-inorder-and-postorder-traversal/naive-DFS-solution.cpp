@@ -1,6 +1,6 @@
 class Solution {
 private:
-	typedef vector<int>::const_iterator I;
+	typedef vector<int>::const_reverse_iterator I;
 	typedef unordered_map<int, I> H;
 	typedef function<TreeNode*(I, I, I, I)> F;
 public:
@@ -10,23 +10,23 @@ public:
 			return NULL;
 
 		H val2inIter;
-		for (auto it = inorder.begin(); it != inorder.end(); ++it)
+		for (auto it = inorder.rbegin(); it != inorder.rend(); ++it)
 			val2inIter[*it] = it;
 
 		F dfs = [&](auto inFirst, auto inLast, auto postFirst, auto postLast) {
-			auto curr = new TreeNode(*(postLast - 1));
+			auto curr = new TreeNode(*postFirst);
 			if (distance(postFirst, postLast) > 1) {
-				--postLast;
-				const int L = distance(inFirst, val2inIter[curr->val]);
-				const int R = distance(inFirst, inLast) - L - 1;
+				++postFirst;
+				const int R = distance(inFirst, val2inIter[curr->val]);
+				const int L = distance(inFirst, inLast) - R - 1;
 
-				if (L > 0)
-					curr->left = dfs(inFirst, inFirst + L, postFirst, postFirst + L);
 				if (R > 0)
-					curr->right = dfs(inLast - R, inLast, postLast - R, postLast);
+					curr->right = dfs(inFirst, inFirst + R, postFirst, postFirst + R);
+				if (L > 0)
+					curr->left = dfs(inLast - L, inLast, postLast - L, postLast);
 			}
 			return curr;
 		};
-		return dfs(inorder.begin(), inorder.end(), postorder.begin(), postorder.end());
+		return dfs(inorder.rbegin(), inorder.rend(), postorder.rbegin(), postorder.rend());
 	}
 };
