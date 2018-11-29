@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n), space: O(1) auxiliary (i.e. does not count input itself) */
 	int maxPathSum(TreeNode* root) {
 		int ans = INT_MIN;
 		/*
