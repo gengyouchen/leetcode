@@ -1,26 +1,38 @@
 class Solution {
+private:
+	typedef tuple<const TreeNode*, int, int> T;
+	typedef stack<T> S;
 public:
 	/* time: O(n), space: O(n) */
 	bool isBalanced(const TreeNode* root) {
 		bool ans = true;
-		unordered_map<const TreeNode*, int> height;
-		stack<const TreeNode*> succ; /* store successors to mimic threaded binary trees */
+		S parents;
 		const TreeNode* prev = NULL;
-		while (root || !succ.empty())
+		int prevRet = 0;
+		while (root || !parents.empty()) {
 			if (root)
-				succ.push(root), root = root->left;
+				parents.push({root, 0, 0}), root = root->left;
 			else {
-				root = succ.top();
+				root = get<0>(parents.top());
+				int &L = get<1>(parents.top()), &R = get<2>(parents.top());
+
+				/* store child's returned value */
+				if (root->left && root->left == prev)
+					L = prevRet;
+				if (root->right && root->right == prev)
+					R = prevRet;
+
+				/* don't parents.pop() if right child is not visited yet */
 				if (root->right && root->right != prev) {
 					root = root->right;
 					continue;
 				}
-				succ.pop();
-				const int L = height[root->left], R = height[root->right];
+
 				ans = ans && (R - L <= 1) && (R - L >= -1);
-				height[root] = 1 + max(L, R);
-				prev = root, root = NULL;
+				prev = root, prevRet = 1 + max(L, R);
+				parents.pop(), root = NULL;
 			}
+		}
 		return ans;
 	}
 };
