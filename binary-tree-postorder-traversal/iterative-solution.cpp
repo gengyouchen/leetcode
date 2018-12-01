@@ -3,19 +3,19 @@ public:
 	/* time: O(n), space: O(n) */
 	vector<int> postorderTraversal(const TreeNode* root) {
 		vector<int> ans;
-		stack<const TreeNode*> succ; /* store successors to mimic threaded binary trees */
+		stack<const TreeNode*> parents;
 		const TreeNode* prev = NULL;
-		while (root || !succ.empty())
+		while (root || !parents.empty())
 			if (root)
-				succ.push(root), root = root->left;
+				parents.push(root), root = root->left;
 			else {
-				root = succ.top();
+				root = parents.top();
 				if (root->right && root->right != prev) {
 					root = root->right;
 					continue;
 				}
-				succ.pop();
-				ans.push_back(root->val), prev = root, root = NULL;
+				ans.push_back(root->val), prev = root;
+				parents.pop(), root = NULL;
 			}
 		return ans;
 	}
