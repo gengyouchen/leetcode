@@ -4,20 +4,13 @@ private:
 public:
 	/* time: O(n), space: O(n) */
 	void flatten(TreeNode* root) {
-		if (!root)
-			return;
 		F dfs = [&](auto root) {
-			if (!root->left && !root->right)
+			if (!root)
 				return root;
-			if (!root->left)
-				return dfs(root->right);
-			if (!root->right) {
-				swap(root->left, root->right);
-				return dfs(root->right);
-			}
-			auto leftTail = dfs(root->left), rightTail = dfs(root->right);
-			leftTail->right = root->right, root->right = root->left, root->left = NULL;
-			return rightTail;
+			auto L = dfs(root->left), R = dfs(root->right);
+			if (root->left)
+				L->right = root->right, root->right = root->left, root->left = NULL;
+			return R ? R : (L ? L : root);
 		};
 		dfs(root);
 	}
