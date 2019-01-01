@@ -12,11 +12,11 @@ public:
 			vector<int> adjList;
 			auto buf = (i < n) ? wordList[i] : beginWord;
 			for (int j = 0; j < buf.size(); ++j) {
-				char self = buf[j];
+				const char self = buf[j];
 				for (int k = 0; k < 26; ++k) {
 					buf[j] = 'a' + k;
 					if (buf[j] != self) {
-						auto it = word2vertex.find(buf);
+						const auto it = word2vertex.find(buf);
 						if (it != word2vertex.end())
 							adjList.push_back(it->second);
 					}
