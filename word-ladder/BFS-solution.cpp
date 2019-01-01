@@ -7,8 +7,6 @@ public:
 		for (int i = 0; i < n; ++i)
 			word2vertex[wordList[i]] = i;
 		word2vertex[beginWord] = n;
-		if (!word2vertex.count(endWord))
-			return 0;
 
 		auto getAdjList = [&](int i) {
 			vector<int> adjList;
@@ -28,10 +26,14 @@ public:
 			return adjList;
 		};
 
-		const int target = word2vertex[endWord];
-		vector<bool> visited(n + 1, false);
+		const auto it = word2vertex.find(endWord);
+		if (it == word2vertex.end())
+			return 0;
+		const int target = it->second;
+
+		vector<bool> discovered(n + 1, false);
 		queue<int> q;
-		q.push(n), visited[n] = true;
+		q.push(n), discovered[n] = true;
 
 		for (int depth = 1; !q.empty(); ++depth) {
 			for (int i = q.size(); i > 0; --i) {
@@ -40,8 +42,8 @@ public:
 				if (u == target)
 					return depth;
 				for (int v : getAdjList(u)) {
-					if (!visited[v])
-						q.push(v), visited[v] = true;
+					if (!discovered[v])
+						q.push(v), discovered[v] = true;
 				}
 			}
 		}
