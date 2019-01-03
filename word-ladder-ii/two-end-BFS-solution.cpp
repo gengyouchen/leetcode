@@ -69,8 +69,8 @@ outputPaths:
 		F backtrackToTarget = [&](int u) {
 			if (u == target) {
 				ans.emplace_back();
-				for (auto it = path.begin(); it != path.end(); ++it)
-					ans.back().push_back((*it < n) ? wordList[*it] : beginWord);
+				for (int i : path)
+					ans.back().push_back((i < n) ? wordList[i] : beginWord);
 			} else {
 				for (int v : parent2[u])
 					path.push_back(v), backtrackToTarget(v), path.pop_back();
