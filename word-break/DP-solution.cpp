@@ -41,12 +41,12 @@ public:
 		for (const auto& word : wordDict)
 			dict.insert(word);
 
-		/* Let dp[i] is true IFF wordBreak(s.substr(i), wordDict) is true */
+		/* Let dp[i] is true if-and-only-if wordBreak(s.substr(i), wordDict) is true */
 		vector<bool> dp(n, false);
 		for (int i = n - 1; i >= 0; --i) {
 			dict.matchAllPrefixes(s.begin() + i, s.end(), [&](auto first, auto last) {
 				const int len = distance(first, last);
-				if (i + len == s.size() || dp[i + len])
+				if (i + len == n || dp[i + len])
 					dp[i] = true;
 			});
 		}
