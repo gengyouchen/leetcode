@@ -5,6 +5,7 @@ private:
 public:
 	/* time: O(n*log(n)), space: O(log(n)) */
 	int maxProduct(const vector<int>& nums) {
+		/* This is a variant of LeetCode 53 - Maximum Subarray */
 		auto prodAcross = [](auto first, auto mid, auto last) {
 			int leftMax = INT_MIN, leftMin = INT_MAX, rightMax = INT_MIN, rightMin = INT_MAX, curr = 1;
 			auto it = mid;

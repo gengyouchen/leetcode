@@ -2,6 +2,7 @@ class Solution {
 public:
 	/* time: O(n), space: O(1) */
 	int maxProduct(const vector<int>& nums) {
+		/* This is a variant of LeetCode 53 - Maximum Subarray */
 		int _maxProd[2], _minProd[2];
 		auto maxProd = [&](int i) -> int& { return _maxProd[i % 2]; };
 		auto minProd = [&](int i) -> int& { return _minProd[i % 2]; };
