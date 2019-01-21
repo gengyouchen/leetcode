@@ -1,17 +1,17 @@
 class Solution {
 private:
 	template <class I, class T, class F>
-		void sortedTwoSum(I first, I last, T target, F found) {
-			while (last - first > 1) {
-				T sum = *first + *(last - 1);
-				if (sum < target)
-					++first;
-				else if (sum > target)
-					--last;
-				else
-					found(first, --last);
-			}
+	void sortedTwoSum(I first, I last, T target, F found) {
+		while (last - first > 1) {
+			T sum = *first + *(last - 1);
+			if (sum < target)
+				++first;
+			else if (sum > target)
+				--last;
+			else
+				found(first, --last);
 		}
+	}
 public:
 	/* time: O(n), space: O(1) */
 	vector<int> twoSum(const vector<int>& numbers, int target) {
