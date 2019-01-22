@@ -12,7 +12,7 @@ public:
 		 * Now, the array becomes [-INF, -INF, -INF, -INF, 12, 19, 33, 64, 69, 75].
 		 * Because this array is not rotated, we can directly use STL binary search.
 		 */
-		auto it = upper_bound(nums.begin(), nums.end(), INT_MIN, [&](int a, int b) {
+		auto it = lower_bound(nums.begin(), nums.end(), INT_MIN, [&](int a, int b) {
 			if (nums.front() > nums.back()) {
 				if (a >= nums.front() && b >= nums.front())
 					return false; /* let a = b = -INFINITY, so a < b is false */
