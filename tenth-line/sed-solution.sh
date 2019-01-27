@@ -1,1 +1,1 @@
-sed -n '10p;11q' file.txt
+sed -n '10p;10q' file.txt
