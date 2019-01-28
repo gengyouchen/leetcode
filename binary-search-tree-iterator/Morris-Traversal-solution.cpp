@@ -1,6 +1,6 @@
 class BSTIterator {
 private:
-	TreeNode *root = NULL, *ans = NULL;
+	TreeNode *root, *ans;
 	void nextAns() {
 		/*
 		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
