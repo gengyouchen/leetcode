@@ -1,6 +1,7 @@
 class Solution {
 private:
 	typedef function<bool(int)> F;
+	enum Color { WHITE, GRAY, BLACK };
 public:
 	/*
 	 * time: O(|V| + |E|), space: O(|V| + |E|)
@@ -14,27 +15,27 @@ public:
 		}
 
 		vector<int> ans;
-		vector<bool> onStack(numCourses, false), visited(numCourses, false);
+		vector<int> color(numCourses, WHITE);
 
 		F dfs = [&](int u) {
-			visited[u] = onStack[u] = true;
+			color[u] = GRAY;
 			for (int v : adjLists[u]) {
-				if (onStack[v])
-					return false; /* failed */
-				if (!visited[v]) {
+				if (color[v] == GRAY) /* u->v is a back edge */
+					return false;
+				if (color[v] == WHITE) /* u->v is a tree edge */ {
 					if (!dfs(v))
-						return false; /* failed */
+						return false;
 				}
 			}
-			onStack[u] = false;
+			color[u] = BLACK;
 			ans.push_back(u);
 			return true;
 		};
 
 		for (int i = 0; i < numCourses; ++i) {
-			if (!visited[i]) {
+			if (color[i] == WHITE) {
 				if (!dfs(i))
-					return {}; /* failed */
+					return {};
 			}
 		}
 		reverse(ans.begin(), ans.end());
