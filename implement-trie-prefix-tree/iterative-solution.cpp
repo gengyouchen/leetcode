@@ -6,7 +6,7 @@ public:
 	/* time: O(1), space: O(1) */
 	Trie() { }
 
-	/* time: O(1), space: O(1) */
+	/* time: O(total # of nodes in trie), space: O(maximum depth in trie) */
 	~Trie() {
 		for (int i = 0; i < 26; ++i)
 			delete next[i];
