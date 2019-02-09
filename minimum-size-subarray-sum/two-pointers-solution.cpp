@@ -1,6 +1,6 @@
 class Solution {
 public:
-	/* time: O(1), space: O(1) */
+	/* time: O(n), space: O(1) */
 	int minSubArrayLen(int s, const vector<int>& nums) {
 		int sum = 0, ans = INT_MAX;
 		/*
