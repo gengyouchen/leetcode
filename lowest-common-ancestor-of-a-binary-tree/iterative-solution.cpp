@@ -6,8 +6,6 @@ private:
 public:
 	/* time: O(n), space: O(n) */
 	TreeNode* lowestCommonAncestor(TreeNode* root, const TreeNode* p, const TreeNode* q) {
-		if (!root)
-			return 0;
 		TreeNode *ans = NULL;
 		int depth = 1, minDepth = INT_MAX, nFound = 0;
 		S succ; /* store successors to mimic threaded binary trees */
