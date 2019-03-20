@@ -15,24 +15,23 @@ public:
 		 *          |
 		 *          b-c-d
 		 */
-		auto preIter = preorder.begin(), inIter = inorder.begin();
-		stack<TreeNode*> s;
-		TreeNode *tail = NULL, *ans = NULL;
-		while (preIter != preorder.end()) {
-			if (!s.empty() && *inIter == s.top()->val) {
-				++inIter, tail = s.top(), s.pop();
+		stack<TreeNode*> successors;
+		TreeNode *leftParent = NULL, *ans = NULL;
+		auto discovery = preorder.begin(), finishing = inorder.begin();
+		while (finishing != inorder.end()) {
+			if (!successors.empty() && successors.top()->val == *finishing) {
+				++finishing, leftParent = successors.top(), successors.pop();
 			} else {
-				if (tail)
-					tail = tail->right = new TreeNode(*preIter++);
-				else if (s.empty())
-					tail = ans = new TreeNode(*preIter++);
+				auto curr = new TreeNode(*discovery++);
+				if (leftParent)
+					leftParent->right = curr;
+				else if (!successors.empty())
+					successors.top()->left = curr;
 				else
-					tail = s.top()->left = new TreeNode(*preIter++);
+					ans = curr;
 
-				if (*inIter == tail->val)
-					++inIter;
-				else
-					s.push(tail), tail = NULL;
+				/* move insertion position to curr->left */
+				successors.push(curr), leftParent = NULL;
 			}
 		}
 		return ans;
