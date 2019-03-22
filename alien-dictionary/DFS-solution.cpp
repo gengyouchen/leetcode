@@ -43,7 +43,7 @@ public:
 			return true;
 		};
 
-		for (auto p : adjLists) {
+		for (const auto& p : adjLists) {
 			if (color[p.first] == WHITE) {
 				if (!dfs(p.first))
 					return "";
