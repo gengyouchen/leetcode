@@ -31,6 +31,13 @@ public:
 
 class Solution {
 public:
+	/*
+	 * time: O(n * alpha(n)) ~= O(n), space: O(n),
+	 * where alpha(x) is the inverse Ackermann function.
+	 *
+	 * Because alpha(x) < 5 for any value x that can be written in this physical universe,
+	 * all the disjoint-set operations take place in essentially constant time.
+	 */
 	bool validTree(int n, const vector<pair<int, int>>& edges) {
 		DisjointSet s(n);
 		for (const auto& edge : edges) {
