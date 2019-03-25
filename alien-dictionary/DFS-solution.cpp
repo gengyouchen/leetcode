@@ -1,6 +1,5 @@
 class Solution {
 private:
-	typedef function<bool(char)> F;
 	enum Color { WHITE, GRAY, BLACK };
 public:
 	/*
@@ -10,10 +9,9 @@ public:
 	string alienOrder(const vector<string>& words) {
 		unordered_map<char, unordered_set<char>> adjLists;
 		for (const auto& word : words) {
-			for (char c : word)
+			for (const char c : word)
 				adjLists.emplace(c, 26);
 		}
-
 		for (int i = 1; i < words.size(); ++i) {
 			const auto &prev = words[i - 1], &curr = words[i];
 			const int len = min(prev.size(), curr.size());
@@ -27,29 +25,40 @@ public:
 
 		string ans;
 		unordered_map<char, int> color;
-
-		F dfs = [&](char u) {
-			color[u] = GRAY;
-			for (char v : adjLists[u]) {
-				if (color[v] == GRAY) /* u->v is a back edge */
-					return false;
-				if (color[v] == WHITE) /* u->v is a tree edge */ {
-					if (!dfs(v))
+		auto dfsVisit = [&](const char src) -> bool {
+			stack<char> s;
+			s.push(src);
+			while (!s.empty()) {
+				const char u = s.top();
+				if (color[u] == WHITE) {
+					color[u] = GRAY;
+					for (const char v : adjLists[u]) {
+						if (color[v] == WHITE) /* tree edge */
+							s.push(v);
+						else if (color[v] == GRAY) /* back edge */
+							return false;
+					}
+				} else if (color[u] == GRAY) {
+					color[u] = BLACK;
+					s.pop();
+					ans.push_back(u);
+				}
+			}
+			return true;
+		};
+		auto dfs = [&]() -> bool {
+			for (const auto& p : adjLists) {
+				const char u = p.first;
+				if (color[u] == WHITE) {
+					if (!dfsVisit(u))
 						return false;
 				}
 			}
-			color[u] = BLACK;
-			ans.push_back(u);
 			return true;
 		};
-
-		for (const auto& p : adjLists) {
-			if (color[p.first] == WHITE) {
-				if (!dfs(p.first))
-					return "";
-			}
-		}
-		reverse(ans.begin(), ans.end());
+		if (!dfs())
+			return "";
+		reverse(ans.begin(), ans.end()); /* get finishing order */
 		return ans;
 	}
 };
