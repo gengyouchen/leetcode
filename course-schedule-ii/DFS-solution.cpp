@@ -1,6 +1,5 @@
 class Solution {
 private:
-	typedef function<bool(int)> F;
 	enum Color { WHITE, GRAY, BLACK };
 public:
 	/*
@@ -9,36 +8,52 @@ public:
 	 */
 	vector<int> findOrder(int numCourses, const vector<pair<int, int>>& prerequisites) {
 		vector<vector<int>> adjLists(numCourses);
-		for (auto it : prerequisites) {
-			const int u = it.second, v = it.first;
+		for (const auto& p : prerequisites) {
+			const int u = p.second, v = p.first;
 			adjLists[u].push_back(v);
 		}
 
-		vector<int> ans;
-		vector<int> color(numCourses, WHITE);
+		vector<int> color(numCourses);
+		vector<vector<int>::iterator> adjIter(numCourses);
+		for (int u = 0; u < numCourses; ++u)
+			adjIter[u] = adjLists[u].begin();
 
-		F dfs = [&](int u) {
-			color[u] = GRAY;
-			for (int v : adjLists[u]) {
-				if (color[v] == GRAY) /* u->v is a back edge */
-					return false;
-				if (color[v] == WHITE) /* u->v is a tree edge */ {
-					if (!dfs(v))
-						return false;
+		vector<int> ans;
+		auto dfsVisit = [&](int src) -> bool {
+			stack<int> s;
+			s.push(src);
+			while (!s.empty()) {
+				const int u = s.top();
+				switch (color[u]) {
+				case WHITE:
+					color[u] = GRAY;
+				case GRAY:
+					if (adjIter[u] != adjLists[u].end()) {
+						const int v = *adjIter[u]++;
+						if (color[v] == GRAY) /* back edge */
+							return false;
+						if (color[v] == WHITE) /* tree edge */
+							s.push(v);
+						continue;
+					}
+					color[u] = BLACK;
+				case BLACK:
+					ans.push_back(u);
+					s.pop();
 				}
 			}
-			color[u] = BLACK;
-			ans.push_back(u);
 			return true;
 		};
-
-		for (int i = 0; i < numCourses; ++i) {
-			if (color[i] == WHITE) {
-				if (!dfs(i))
-					return {};
+		auto dfs = [&]() -> bool {
+			for (int u = 0; u < numCourses; ++u) {
+				if (color[u] == WHITE && !dfsVisit(u))
+					return false;
 			}
-		}
-		reverse(ans.begin(), ans.end());
+			return true;
+		};
+		if (!dfs())
+			return {};
+		reverse(ans.begin(), ans.end()); /* get finishing order */
 		return ans;
 	}
 };
