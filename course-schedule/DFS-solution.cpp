@@ -1,6 +1,5 @@
 class Solution {
 private:
-	typedef function<bool(int)> F;
 	enum Color { WHITE, GRAY, BLACK };
 public:
 	/*
@@ -14,28 +13,42 @@ public:
 			adjLists[u].push_back(v);
 		}
 
-		vector<int> color(numCourses, WHITE);
+		vector<int> color(numCourses);
+		vector<vector<int>::iterator> adjIter(numCourses);
+		for (int u = 0; u < numCourses; ++u)
+			adjIter[u] = adjLists[u].begin();
 
-		F dfs = [&](int u) {
-			color[u] = GRAY;
-			for (int v : adjLists[u]) {
-				if (color[v] == GRAY) /* u->v is a back edge */
-					return false;
-				if (color[v] == WHITE) /* u->v is a tree edge */ {
-					if (!dfs(v))
-						return false;
+		auto dfsVisit = [&](int src) -> bool {
+			stack<int> s;
+			s.push(src);
+			while (!s.empty()) {
+				const int u = s.top();
+				switch (color[u]) {
+				case WHITE:
+					color[u] = GRAY;
+				case GRAY:
+					if (adjIter[u] != adjLists[u].end()) {
+						const int v = *adjIter[u]++;
+						if (color[v] == GRAY) /* back edge */
+							return false;
+						if (color[v] == WHITE) /* tree edge */
+							s.push(v);
+						continue;
+					}
+					color[u] = BLACK;
+				case BLACK:
+					s.pop();
 				}
 			}
-			color[u] = BLACK;
 			return true;
 		};
-
-		for (int i = 0; i < numCourses; ++i) {
-			if (color[i] == WHITE) {
-				if (!dfs(i))
+		auto dfs = [&]() -> bool {
+			for (int u = 0; u < numCourses; ++u) {
+				if (color[u] == WHITE && !dfsVisit(u))
 					return false;
 			}
-		}
-		return true;
+			return true;
+		};
+		return dfs();
 	}
 };
