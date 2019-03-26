@@ -11,14 +11,14 @@ public:
 			adjLists[v].push_back(u);
 		}
 
-		vector<int> color(n), parent(n, -1);
+		vector<int> color(n), parent(n);
 		vector<vector<int>::iterator> adjIter(n);
 		for (int u = 0; u < n; ++u)
 			adjIter[u] = adjLists[u].begin();
 
 		auto dfsVisit = [&](int src) -> bool {
 			stack<int> s;
-			s.push(src);
+			s.push(src), parent[src] = -1;
 			while (!s.empty()) {
 				const int u = s.top();
 				switch (color[u]) {
