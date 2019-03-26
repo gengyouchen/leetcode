@@ -23,25 +23,35 @@ public:
 			}
 		}
 
-		string ans;
 		unordered_map<char, int> color;
-		auto dfsVisit = [&](const char src) -> bool {
+		unordered_map<char, unordered_set<char>::iterator> adjIter;
+		for (const auto& p : adjLists) {
+			const char u = p.first;
+			adjIter[u] = adjLists[u].begin();
+		}
+
+		string ans;
+		auto dfsVisit = [&](char src) -> bool {
 			stack<char> s;
 			s.push(src);
 			while (!s.empty()) {
 				const char u = s.top();
-				if (color[u] == WHITE) {
+				switch (color[u]) {
+				case WHITE:
 					color[u] = GRAY;
-					for (const char v : adjLists[u]) {
+				case GRAY:
+					if (adjIter[u] != adjLists[u].end()) {
+						const char v = *adjIter[u]++;
+						if (color[v] == GRAY) /* back edge */
+							return false;
 						if (color[v] == WHITE) /* tree edge */
 							s.push(v);
-						else if (color[v] == GRAY) /* back edge */
-							return false;
+						continue;
 					}
-				} else if (color[u] == GRAY) {
 					color[u] = BLACK;
-					s.pop();
+				case BLACK:
 					ans.push_back(u);
+					s.pop();
 				}
 			}
 			return true;
