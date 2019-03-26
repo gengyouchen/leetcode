@@ -32,8 +32,8 @@ public:
 class Solution {
 public:
 	/*
-	 * time: O(n * alpha(n)) ~= O(n), space: O(n),
-	 * where alpha(x) is the inverse Ackermann function.
+	 * time: O(k * alpha(k)) ~= O(k), space: O(n),
+	 * where alpha(x) is the inverse Ackermann function, and k = |edges|
 	 *
 	 * Because alpha(x) < 5 for any value x that can be written in this physical universe,
 	 * all the disjoint-set operations take place in essentially constant time.
