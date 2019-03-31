@@ -19,20 +19,21 @@ public:
 		vector<int> ugly;
 		ugly.push_back(1);
 
-		auto L1 = [&](int k) { return ugly[k] * 2; };
-		auto L2 = [&](int k) { return ugly[k] * 3; };
-		auto L3 = [&](int k) { return ugly[k] * 5; };
+		auto L1 = [&](int i) { return ugly[i] * 2; };
+		auto L2 = [&](int i) { return ugly[i] * 3; };
+		auto L3 = [&](int i) { return ugly[i] * 5; };
 
 		int x = 0, y = 0, z = 0;
 		for (int i = 1; i < n; ++i) {
 			const int next = min(min(L1(x), L2(y)), L3(z));
+			ugly.push_back(next);
+
 			if (L1(x) == next)
 				++x;
 			if (L2(y) == next)
 				++y;
 			if (L3(z) == next)
 				++z;
-			ugly.push_back(next);
 		}
 		return ugly.back();
 	}
