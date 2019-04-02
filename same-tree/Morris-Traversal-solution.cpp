@@ -1,45 +1,55 @@
+class MorrisTraversal {
+private:
+	TreeNode dummy;
+	TreeNode *curr;
+	void nextInorder() {
+		if (!curr)
+			return;
+		curr = curr->right;
+		while (curr && curr->left) {
+			TreeNode *pred = curr->left;
+			while (pred->right && pred->right != curr)
+				pred = pred->right;
+			if (pred->right) {
+				pred->right = NULL;
+				break;
+			}
+			pred->right = curr, curr = curr->left;
+		}
+	}
+public:
+	MorrisTraversal(TreeNode *root) : dummy(-1), curr(&dummy) {
+		dummy.right = root, nextInorder();
+	}
+	bool hasNext() const {
+		return curr;
+	}
+	TreeNode *next() {
+		TreeNode *prev = curr;
+		nextInorder();
+		return prev;
+	}
+};
+
 class Solution {
 private:
-	typedef TreeNode* T;
-	T getNext(T& root) {
-		T ans = NULL;
-		/*
-		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
-		 * See LeetCode 94 - Binary Tree Inorder Traversal
-		 */
-		while (root && !ans) {
-			if (root->left) {
-				T pred = root->left;
-				while (pred->right && pred->right != root)
-					pred = pred->right;
-				if (!pred->right) {
-					pred->right = root;
-					root = root->left;
-					continue;
-				}
-				pred->right = NULL;
-			}
-			ans = root;
-			root = root->right;
-		}
-		return ans;
+	static bool isSameNode(const TreeNode *p, const TreeNode *q) {
+		return (!p && !q) || (p && q && p->val == q->val);
 	}
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input itself) */
-	bool isSameTree(TreeNode* p, TreeNode* q) {
+	static bool isSameTree(TreeNode *p, TreeNode *q) {
+		MorrisTraversal P(p), Q(q);
 		bool ans = true;
-		T i = getNext(p), j = getNext(q);
-		while (i && j) {
-			ans = ans &&
-				(i->val == j->val) &&
-				(i->left && j->left && i->left->val == j->left->val || !i->left && !j->left) &&
-				(i->right && j->right && i->right->val == j->right->val || !i->right && !j->right);
-			i = getNext(p), j = getNext(q);
+		while (P.hasNext() && Q.hasNext()) {
+			p = P.next(), q = Q.next();
+			if (!isSameNode(p, q) || !isSameNode(p->left, q->left) || !isSameNode(p->right, q->right))
+				ans = false;
 		}
-		while (i)
-			ans = false, i = getNext(p);
-		while (j)
-			ans = false, j = getNext(q);
+		while (P.hasNext())
+			ans = false, p = P.next();
+		while (Q.hasNext())
+			ans = false, q = Q.next();
 		return ans;
 	}
 };

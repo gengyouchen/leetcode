@@ -1,11 +1,11 @@
 class Solution {
 private:
-	bool isSameNode(const TreeNode *p, const TreeNode *q) const {
+	static bool isSameNode(const TreeNode *p, const TreeNode *q) {
 		return (!p && !q) || (p && q && p->val == q->val);
 	}
 public:
 	/* time: O(n), space: O(n) */
-	bool isSameTree(const TreeNode *p, const TreeNode *q) const {
+	static bool isSameTree(const TreeNode *p, const TreeNode *q) {
 		queue<const TreeNode*> P, Q;
 		if (!isSameNode(p, q))
 			return false;
