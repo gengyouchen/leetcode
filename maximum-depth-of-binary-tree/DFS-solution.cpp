@@ -1,7 +1,7 @@
 class Solution {
 public:
 	/* time: O(n), space: O(n) */
-	int maxDepth(const TreeNode *root) {
+	static int maxDepth(const TreeNode *root) {
 		int ans = 0;
 		stack<pair<const TreeNode*, int>> S;
 		if (root)

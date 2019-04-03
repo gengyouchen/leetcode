@@ -1,31 +1,48 @@
+class MorrisTraversal {
+private:
+	TreeNode dummy;
+	TreeNode *curr;
+	int depth = 0;
+	void nextInorder() {
+		if (!curr)
+			return;
+		curr = curr->right, ++depth;
+		while (curr && curr->left) {
+			TreeNode *pred = curr->left;
+			int deltaDepth = 1;
+			while (pred->right && pred->right != curr)
+				pred = pred->right, ++deltaDepth;
+			if (pred->right) {
+				pred->right = NULL, depth -= deltaDepth + 1;
+				break;
+			}
+			pred->right = curr, curr = curr->left, ++depth;
+		}
+	}
+public:
+	MorrisTraversal(TreeNode *root) : dummy(-1), curr(&dummy) {
+		dummy.right = root, nextInorder();
+	}
+	bool hasNext() const {
+		return curr;
+	}
+	pair<TreeNode*, int> next() {
+		TreeNode *prev = curr;
+		const int prevDepth = depth;
+		nextInorder();
+		return {prev, prevDepth};
+	}
+};
+
 class Solution {
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input itself) */
-	int maxDepth(TreeNode* root) {
-		if (!root)
-			return 0;
-		int ans = 0, depth = 1;
-		/*
-		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
-		 * See LeetCode 94 - Binary Tree Inorder Traversal
-		 */
-		while (root) {
-			if (root->left) {
-				auto pred = root->left;
-				int deltaDepth = 1; /* between root and pred */
-				while (pred->right && pred->right != root)
-					pred = pred->right, ++deltaDepth;
-				if (!pred->right) {
-					pred->right = root;
-					root = root->left, ++depth;
-					continue;
-				}
-				pred->right = NULL;
-				--depth; /* rollback to pred's depth */
-				depth -= deltaDepth;
-			}
-			ans = max(ans, depth);
-			root = root->right, ++depth;
+	static int maxDepth(TreeNode *root) {
+		int ans = 0;
+		MorrisTraversal it(root);
+		while (it.hasNext()) {
+			pair<TreeNode*, int> curr = it.next();
+			ans = max(ans, curr.second);
 		}
 		return ans;
 	}
