@@ -5,7 +5,7 @@ private:
 	};
 public:
 	/* time: O(n), space: O(n) */
-	static int minDepth(const TreeNode* root) {
+	static int minDepth(const TreeNode *root) {
 		int ans = INT_MAX;
 		queue<const TreeNode*> Q;
 		if (root)

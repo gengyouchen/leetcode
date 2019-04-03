@@ -41,7 +41,7 @@ private:
 	};
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input itself) */
-	static int minDepth(TreeNode* root) {
+	static int minDepth(TreeNode *root) {
 		int ans = INT_MAX;
 		MorrisTraversal it(root);
 		while (it.hasNext()) {
