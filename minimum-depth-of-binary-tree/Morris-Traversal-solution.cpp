@@ -1,38 +1,54 @@
+class MorrisTraversal {
+private:
+	TreeNode dummy;
+	TreeNode *curr;
+	int depth = 0;
+	void nextInorder() {
+		if (!curr)
+			return;
+		curr = curr->right, ++depth;
+		while (curr && curr->left) {
+			TreeNode *pred = curr->left;
+			int deltaDepth = 1;
+			while (pred->right && pred->right != curr)
+				pred = pred->right, ++deltaDepth;
+			if (pred->right) {
+				pred->right = NULL, depth -= deltaDepth + 1;
+				break;
+			}
+			pred->right = curr, curr = curr->left, ++depth;
+		}
+	}
+public:
+	MorrisTraversal(TreeNode *root) : dummy(-1), curr(&dummy) {
+		dummy.right = root, nextInorder();
+	}
+	bool hasNext() const {
+		return curr;
+	}
+	pair<TreeNode*, int> next() {
+		TreeNode *prev = curr;
+		const int prevDepth = depth;
+		nextInorder();
+		return {prev, prevDepth};
+	}
+};
+
 class Solution {
+private:
+	static bool isLeafNode(const TreeNode *x) {
+		return x && !x->left && !x->right;
+	};
 public:
 	/* time: O(n), space: O(1) auxiliary (i.e. does not count input itself) */
-	int minDepth(TreeNode* root) {
-		if (!root)
-			return 0;
-		int ans = INT_MAX, depth = 1, prevDepth = 0;
-		TreeNode *prev = NULL;
-		auto isLeaf = [](auto x) { return x && !x->left && !x->right; };
-		/*
-		 * Use the "Morris Traversal" method to achieve O(1) auxiliary space
-		 * See LeetCode 94 - Binary Tree Inorder Traversal
-		 */
-		while (root) {
-			if (root->left) {
-				auto pred = root->left;
-				int deltaDepth = 1; /* between root and pred */
-				while (pred->right && pred->right != root)
-					pred = pred->right, ++deltaDepth;
-				if (!pred->right) {
-					pred->right = root;
-					root = root->left, ++depth;
-					continue;
-				}
-				pred->right = NULL;
-				--depth; /* rollback to pred's depth */
-				depth -= deltaDepth;
-			}
-			if (isLeaf(prev))
-				ans = min(ans, prevDepth);
-			prev = root, prevDepth = depth;
-			root = root->right, ++depth;
+	static int minDepth(TreeNode* root) {
+		int ans = INT_MAX;
+		MorrisTraversal it(root);
+		while (it.hasNext()) {
+			pair<TreeNode*, int> curr = it.next();
+			if (isLeafNode(curr.first))
+				ans = min(ans, curr.second);
 		}
-		if (isLeaf(prev))
-			ans = min(ans, prevDepth);
-		return ans;
+		return (ans == INT_MAX) ? 0 : ans;
 	}
 };
