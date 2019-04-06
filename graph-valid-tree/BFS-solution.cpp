@@ -12,24 +12,20 @@ public:
 		}
 
 		vector<int> color(n);
-		auto dfsVisit = [&](int src) -> bool {
-			queue<int> q;
-			q.push(src), color[src] = GRAY;
-			while (!q.empty()) {
-				const int u = q.front();
-				q.pop();
-				for (const int v : adjLists[u]) {
-					if (color[v] == GRAY) /* cross edge */
-						return false;
-					if (color[v] == WHITE) /* tree edge */
-						q.push(v), color[v] = GRAY;
-				}
-				color[u] = BLACK;
+		queue<int> q;
+		q.push(0), color[0] = GRAY;
+		while (!q.empty()) {
+			const int u = q.front();
+			q.pop();
+			for (const int v : adjLists[u]) {
+				if (color[v] == GRAY) /* cross edge */
+					return false;
+				if (color[v] == WHITE) /* tree edge */
+					q.push(v), color[v] = GRAY;
 			}
-			return true;
-		};
-		if (!dfsVisit(0))
-			return false;
+			color[u] = BLACK;
+		}
+
 		for (int u = 0; u < n; ++u) {
 			if (color[u] != BLACK)
 				return false;
@@ -37,3 +33,4 @@ public:
 		return true;
 	}
 };
+
