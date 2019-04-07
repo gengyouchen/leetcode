@@ -55,10 +55,10 @@ public:
 		vector<vector<int>> dp(n);
 		for (int i = n - 1; i >= 0; --i) {
 			dict.matchAllPrefixes(s.begin() + i, s.end(), [&](auto first, auto last) {
-					const int len = distance(first, last);
-					if (i + len == n || !dp[i + len].empty())
+				const int len = distance(first, last);
+				if (i + len == n || !dp[i + len].empty())
 					dp[i].push_back(i + len);
-					});
+			});
 		}
 
 		vector<string> ans;
