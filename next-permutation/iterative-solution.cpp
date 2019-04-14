@@ -1,22 +1,17 @@
 class Solution {
 public:
-	/* time: O(n), space: O(1) */
-	void nextPermutation(vector<int>& nums) {
-		auto it = nums.end() - 1;
-		while (it != nums.begin() && *(it - 1) >= *it)
-			--it;
+	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
+	static void nextPermutation(vector<int>& nums) {
+		const auto curr = is_sorted_until(nums.rbegin(), nums.rend());
 		/*
-		 * Now, sub-permutation [it, it + 1, it + 2, ..., nums.end() - 1] is
-		 * the greatest permutation of itself (i.e. sorted in descending order)
+		 * The sub-permutation { *(curr-1), *(curr-2), *(curr-3), ..., *nums.rbegin() }
+		 * is already the greatest possible sub-permutation of itself
 		 */
-
-		if (it != nums.begin()) {
-			auto curr = it - 1;
-			auto next = nums.end() - 1;
-			while (*next <= *curr)
-				--next;
+		if (curr != nums.rend()) {
+			auto cond = [&](int num) { return num > *curr; };
+			const auto next = find_if(nums.rbegin(), nums.rend(), cond);
 			iter_swap(curr, next);
 		}
-		reverse(it, nums.end());
+		reverse(nums.rbegin(), curr);
 	}
 };
