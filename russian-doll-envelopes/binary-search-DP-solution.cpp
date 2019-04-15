@@ -23,9 +23,11 @@ private:
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static int maxEnvelopes(vector<pair<int, int>>& envelopes) {
-		sort(envelopes.begin(), envelopes.end(), [](const auto& a, const auto& b) {
-				return (a.first == b.first) ? (a.second > b.second) : (a.first < b.first);
-				});
+		auto comp = [](const auto& a, const auto& b) {
+			return (a.first == b.first) ? (a.second > b.second) : (a.first < b.first);
+		};
+		sort(envelopes.begin(), envelopes.end(), comp);
+
 		const int n = envelopes.size();
 		vector<int> nums(n);
 		for (int i = 0; i < n; ++i)
