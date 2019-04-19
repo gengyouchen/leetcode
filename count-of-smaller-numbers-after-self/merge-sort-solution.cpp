@@ -11,10 +11,7 @@ private:
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> countSmaller(const vector<int>& nums) {
-		if (nums.empty())
-			return {};
 		const int n = nums.size();
-
 		vector<pair<int, int>> A;
 		for (int i = 0; i < n; ++i)
 			A.emplace_back(nums[i], i);
