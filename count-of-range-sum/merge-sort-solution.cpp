@@ -9,6 +9,7 @@ private:
 		}
 	}
 public:
+	/* time: O(n*log(n)), space: O(n) */
 	static int countRangeSum(const vector<int>& nums, int lower, int upper) {
 		const int n = nums.size();
 		vector<long long> prefix(n + 1);
