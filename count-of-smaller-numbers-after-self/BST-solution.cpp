@@ -1,7 +1,9 @@
+template <class K>
 class OrderStatisticTree {
 private:
 	struct TreeNode {
-		int key, h = 1, size = 1;
+		K key;
+		int h = 1, size = 1;
 		TreeNode *left = NULL, *right = NULL;
 	};
 	static int h(const TreeNode *root) { return root ? root->h : 0; };
@@ -51,11 +53,11 @@ private:
 	}
 	TreeNode *root = NULL;
 public:
-	void insert(int key) {
+	void insert(K key) {
 		auto x = new TreeNode();
 		x->key = key, root = insert(root, x);
 	}
-	int rank(int key) const {
+	int rank(K key) const {
 		int count = 0;
 		auto p = root;
 		while (p) {
@@ -75,7 +77,7 @@ public:
 	static vector<int> countSmaller(const vector<int>& nums) {
 		const int n = nums.size();
 		vector<int> ans(n);
-		OrderStatisticTree ost;
+		OrderStatisticTree<int> ost;
 		for (int i = n - 1; i >= 0; --i)
 			ans[i] = ost.rank(nums[i]), ost.insert(nums[i]);
 		return ans;
