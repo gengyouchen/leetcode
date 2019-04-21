@@ -2,29 +2,21 @@ class OrderStatisticTree {
 private:
 	vector<int> segTree;
 public:
-	OrderStatisticTree(int n, bool present) {
+	OrderStatisticTree(int n) {
 		int nLeaf = 1;
 		while (nLeaf < n)
 			nLeaf *= 2;
-		segTree.resize(nLeaf);
-		segTree.resize(nLeaf + n, present ? 1 : 0);
 		segTree.resize(nLeaf * 2, 0);
-		for (int x = nLeaf - 1; x; --x)
-			segTree[x] = segTree[x * 2] + segTree[x * 2 + 1];
 	}
-	void modify(int x, bool present) {
-		x += segTree.size() / 2;
-		segTree[x] = present ? 1 : 0;
-		while (x /= 2)
-			segTree[x] = segTree[x * 2] + segTree[x * 2 + 1];
+	void insert(int x) {
+		for (int i = x + segTree.size() / 2; i > 0; i /= 2)
+			segTree[i] += 1;
 	}
 	int rank(int x) const {
 		int count = 0;
-		x += segTree.size() / 2;
-		while (x) {
-			if (x % 2)
-				count += segTree[x - 1];
-			x /= 2;
+		for (int i = x + segTree.size() / 2; i > 0; i /= 2) {
+			if (i % 2)
+				count += segTree[i - 1];
 		}
 		return count;
 	}
@@ -44,9 +36,9 @@ public:
 		sort(A.begin(), A.end());
 
 		vector<int> ans(n);
-		OrderStatisticTree ost(n, false);
+		OrderStatisticTree ost(n);
 		for (int i = n - 1; i >= 0; --i)
-			ans[i] = ost.rank(A[i].second), ost.modify(A[i].second, true);
+			ans[i] = ost.rank(A[i].second), ost.insert(A[i].second);
 		return ans;
 	}
 };
