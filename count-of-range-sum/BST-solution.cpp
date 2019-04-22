@@ -53,20 +53,20 @@ private:
 	}
 	TreeNode *root = NULL;
 public:
-	void insert(K key) {
+	void insert(const K& key) {
 		auto x = new TreeNode();
 		x->key = key, root = insert(root, x);
 	}
-	int rank(K key) const {
-		int count = 0;
+	int rank(const K& key) const {
+		int ranking = 1;
 		auto p = root;
 		while (p) {
 			if (key <= p->key)
 				p = p->left;
 			else
-				count += 1 + size(p->left), p = p->right;
+				ranking += 1 + size(p->left), p = p->right;
 		}
-		return count;
+		return ranking;
 	}
 	~OrderStatisticTree() { erase(root); }
 };
@@ -77,15 +77,15 @@ private:
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static int countRangeSum(const vector<int>& nums, int lower, int upper) {
+		const int n = nums.size();
+		vector<K> S(n + 1);
+		for (int i = 1; i <= n; ++i)
+			S[i] = S[i - 1] + nums[i - 1];
+
 		int ans = 0;
-		K prefix = 0;
 		OrderStatisticTree<K> ost;
-		ost.insert(prefix);
-		for (int num : nums) {
-			prefix += num;
-			ans += ost.rank(prefix - lower + 1) - ost.rank(prefix - upper);
-			ost.insert(prefix);
-		}
+		for (auto s : S)
+			ans += ost.rank(s - lower + 1) - ost.rank(s - upper), ost.insert(s);
 		return ans;
 	}
 };
