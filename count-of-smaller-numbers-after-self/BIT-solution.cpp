@@ -1,18 +1,39 @@
+template <class K>
 class OrderStatisticTree {
 private:
+	unordered_map<K, int> key2leaf;
 	vector<int> BIT;
 	static int lowbit(int x) { return x & -x; }
 public:
-	OrderStatisticTree(int n) : BIT(n + 1) {}
-	void insert(int x) {
-		for (int i = x + 1; i < BIT.size(); i += lowbit(i))
-			BIT[i] += 1;
+	template <class I>
+	OrderStatisticTree(I first, I last) {
+		for (auto it = first; it != last; ++it)
+			key2leaf.emplace(*it, 0);
+		const int n = key2leaf.size();
+
+		vector<K> keys(n);
+		auto getKey = [](const auto& ii) { return ii.first; };
+		transform(key2leaf.begin(), key2leaf.end(), keys.begin(), getKey);
+		sort(keys.begin(), keys.end());
+
+		BIT.resize(n + 1, 0);
+		int x = 1;
+		for (const auto& key : keys)
+			key2leaf[key] = x++;
 	}
-	int rank(int x) const {
-		int count = 0;
-		for (int i = x + 1; i > 0; i -= lowbit(i))
-			count += BIT[i];
-		return count;
+	void insert(const K& key) {
+		auto it = key2leaf.find(key);
+		assert(it != key2leaf.end());
+		for (int x = it->second; x < BIT.size(); x += lowbit(x))
+			++BIT[x];
+	}
+	int rank(const K& key) const {
+		int ranking = 1;
+		auto it = key2leaf.find(key);
+		assert(it != key2leaf.end());
+		for (int x = it->second - 1; x > 0; x -= lowbit(x))
+			ranking += BIT[x];
+		return ranking;
 	}
 };
 
@@ -21,18 +42,10 @@ public:
 	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> countSmaller(const vector<int>& nums) {
 		const int n = nums.size();
-		vector<pair<int, int>> A;
-		for (int i = 0; i < n; ++i)
-			A.emplace_back(nums[i], i);
-		sort(A.begin(), A.end());
-		for (int i = 0; i < n; ++i)
-			A[i].first = A[i].second, A[i].second = i;
-		sort(A.begin(), A.end());
-
 		vector<int> ans(n);
-		OrderStatisticTree ost(n);
+		OrderStatisticTree<int> ost(nums.begin(), nums.end());
 		for (int i = n - 1; i >= 0; --i)
-			ans[i] = ost.rank(A[i].second), ost.insert(A[i].second);
+			ans[i] = ost.rank(nums[i]) - 1, ost.insert(nums[i]);
 		return ans;
 	}
 };
