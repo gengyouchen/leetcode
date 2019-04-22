@@ -35,14 +35,12 @@ public:
 };
 
 class Solution {
-private:
-	typedef long long K;
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> countSmaller(const vector<int>& nums) {
 		const int n = nums.size();
 		vector<int> ans(n);
-		OrderStatisticTree<K> ost(nums.begin(), nums.end());
+		OrderStatisticTree<int> ost(nums.begin(), nums.end());
 		for (int i = n - 1; i >= 0; --i)
 			ans[i] = ost.rank(nums[i]) - 1, ost.insert(nums[i]);
 		return ans;
