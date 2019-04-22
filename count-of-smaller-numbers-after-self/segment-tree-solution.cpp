@@ -8,14 +8,18 @@ public:
 	OrderStatisticTree(I first, I last) {
 		for (auto it = first; it != last; ++it)
 			key2leaf.emplace(*it, 0);
-		vector<K> keys(key2leaf.size());
+		const int n = key2leaf.size();
+
+		vector<K> keys(n);
 		auto getKey = [](const auto& ii) { return ii.first; };
 		transform(key2leaf.begin(), key2leaf.end(), keys.begin(), getKey);
 		sort(keys.begin(), keys.end());
+
 		int nLeaf = 1;
-		while (nLeaf < key2leaf.size())
+		while (nLeaf < n)
 			nLeaf *= 2;
 		segTree.resize(nLeaf * 2, 0);
+
 		int x = nLeaf;
 		for (const auto& key : keys)
 			key2leaf[key] = x++;
