@@ -66,6 +66,7 @@ private:
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static int countRangeSum(const vector<int>& nums, int lower, int upper) {
+		srand(time(NULL));
 		const int n = nums.size();
 		vector<K> S(n + 1);
 		for (int i = 1; i <= n; ++i)
