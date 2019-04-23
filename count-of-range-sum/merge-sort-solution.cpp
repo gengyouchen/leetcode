@@ -1,14 +1,8 @@
 class Solution {
 private:
 	typedef long long K;
-	template <class I, class F>
-	static void mergeSort(I first, I last, F beforeMerged) {
-		if (distance(first, last) > 1) {
-			const auto mid = first + distance(first, last) / 2;
-			mergeSort(first, mid, beforeMerged), mergeSort(mid, last, beforeMerged);
-			beforeMerged(first, mid, last), inplace_merge(first, mid, last);
-		}
-	}
+	typedef vector<K>::iterator I;
+	typedef function<void(I, I)> F;
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static int countRangeSum(const vector<int>& nums, int lower, int upper) {
@@ -28,7 +22,20 @@ public:
 				ans += distance(L0, L1);
 			}
 		};
-		mergeSort(S.begin(), S.end(), beforeMerged);
+
+		vector<K> buf(n + 1);
+		F mergeSort = [&](auto first, auto last) {
+			if (distance(first, last) > 1) {
+				const auto mid = first + distance(first, last) / 2;
+				mergeSort(first, mid), mergeSort(mid, last);
+
+				beforeMerged(first, mid, last);
+
+				const auto end = merge(first, mid, mid, last, buf.begin());
+				copy(buf.begin(), end, first);
+			}
+		};
+		mergeSort(S.begin(), S.end());
 		return ans;
 	}
 };
