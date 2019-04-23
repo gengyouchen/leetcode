@@ -1,18 +1,13 @@
 class Solution {
 private:
-	template <class I, class F>
-	static void mergeSort(I first, I last, F beforeMerged) {
-		if (distance(first, last) > 1) {
-			const auto mid = first + distance(first, last) / 2;
-			mergeSort(first, mid, beforeMerged), mergeSort(mid, last, beforeMerged);
-			beforeMerged(first, mid, last), inplace_merge(first, mid, last);
-		}
-	}
+	typedef pair<int, int> PII;
+	typedef vector<PII>::iterator I;
+	typedef function<void(I, I)> F;
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> countSmaller(const vector<int>& nums) {
 		const int n = nums.size();
-		vector<pair<int, int>> A(n);
+		vector<PII> A(n);
 		for (int i = 0; i < n; ++i)
 			A[i].first = nums[i], A[i].second = i;
 
@@ -25,7 +20,20 @@ public:
 				ans[L->second] += distance(mid, R);
 			}
 		};
-		mergeSort(A.begin(), A.end(), beforeMerged);
+
+		vector<PII> buf(n);
+		F mergeSort = [&](auto first, auto last) {
+			if (distance(first, last) > 1) {
+				const auto mid = first + distance(first, last) / 2;
+				mergeSort(first, mid), mergeSort(mid, last);
+
+				beforeMerged(first, mid, last);
+
+				const auto end = merge(first, mid, mid, last, buf.begin());
+				copy(buf.begin(), end, first);
+			}
+		};
+		mergeSort(A.begin(), A.end());
 		return ans;
 	}
 };
