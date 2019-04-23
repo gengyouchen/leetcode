@@ -3,7 +3,7 @@ class OrderStatisticTree {
 private:
 	struct TreeNode {
 		K key;
-		int priority = rand(), size = 1;
+		int priority, size = 1;
 		TreeNode *left = NULL, *right = NULL;
 	};
 	static int size(const TreeNode *root) { return root ? root->size : 0; };
@@ -44,18 +44,18 @@ private:
 public:
 	void insert(const K& key) {
 		auto x = new TreeNode();
-		x->key = key, root = insert(root, x);
+		x->key = key, x->priority = rand(), root = insert(root, x);
 	}
-	int rank(const K& key) const {
-		int ranking = 1;
+	int countSmaller(const K& key) const {
+		int count = 0;
 		auto p = root;
 		while (p) {
 			if (key <= p->key)
 				p = p->left;
 			else
-				ranking += 1 + size(p->left), p = p->right;
+				count += 1 + size(p->left), p = p->right;
 		}
-		return ranking;
+		return count;
 	}
 	~OrderStatisticTree() { erase(root); }
 };
@@ -64,11 +64,12 @@ class Solution {
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> countSmaller(const vector<int>& nums) {
+		srand(time(NULL));
 		const int n = nums.size();
 		vector<int> ans(n);
 		OrderStatisticTree<int> ost;
 		for (int i = n - 1; i >= 0; --i)
-			ans[i] = ost.rank(nums[i]) - 1, ost.insert(nums[i]);
+			ans[i] = ost.countSmaller(nums[i]), ost.insert(nums[i]);
 		return ans;
 	}
 };
