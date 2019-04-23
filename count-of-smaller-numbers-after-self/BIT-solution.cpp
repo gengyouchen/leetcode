@@ -27,13 +27,13 @@ public:
 		for (int x = it->second; x < BIT.size(); x += lowbit(x))
 			++BIT[x];
 	}
-	int rank(const K& key) const {
-		int ranking = 1;
+	int countSmaller(const K& key) const {
+		int count = 0;
 		auto it = key2leaf.find(key);
 		assert(it != key2leaf.end());
 		for (int x = it->second - 1; x > 0; x -= lowbit(x))
-			ranking += BIT[x];
-		return ranking;
+			count += BIT[x];
+		return count;
 	}
 };
 
@@ -45,7 +45,7 @@ public:
 		vector<int> ans(n);
 		OrderStatisticTree<int> ost(nums.begin(), nums.end());
 		for (int i = n - 1; i >= 0; --i)
-			ans[i] = ost.rank(nums[i]) - 1, ost.insert(nums[i]);
+			ans[i] = ost.countSmaller(nums[i]), ost.insert(nums[i]);
 		return ans;
 	}
 };
