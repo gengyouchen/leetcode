@@ -64,6 +64,7 @@ public:
 class MedianFinder {
 private:
 	OrderStatisticTree<int> ost;
+	double mid;
 public:
 	/* time: O(1), space: O(1) auxiliary (i.e. does not count tree itself) */
 	MedianFinder() {
@@ -73,13 +74,15 @@ public:
 	/* time: O(log(n)), space: O(1) auxiliary (i.e. does not count tree itself) */
 	void addNum(int num) {
 		ost.insert(num);
-	}
-
-	/* time: O(log(n)), space: O(1) auxiliary (i.e. does not count tree itself) */
-	double findMedian() const {
 		const int n = ost.size();
 		if (n % 2)
-			return ost.select((n + 1) / 2);
-		return ((double)ost.select(n / 2) + (double)ost.select(n / 2 + 1)) / 2;
+			mid = ost.select((n + 1) / 2);
+		else
+			mid = ((double)ost.select(n / 2) + (double)ost.select(n / 2 + 1)) / 2;
+	}
+
+	/* time: O(1), space: O(1) auxiliary (i.e. does not count tree itself) */
+	double findMedian() const {
+		return mid;
 	}
 };
