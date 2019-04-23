@@ -1,33 +1,30 @@
 template <class K>
 class OrderStatisticTree {
 private:
-	map<K, int> key2leaf;
+	vector<K> keys;
 	vector<int> BIT;
 	static int lowbit(int x) { return x & -x; }
 public:
 	template <class I>
 	OrderStatisticTree(I first, I last) {
-		for (auto it = first; it != last; ++it)
-			key2leaf.emplace(*it, 0);
-		BIT.resize(key2leaf.size() + 1, 0);
-		int x = 1;
-		for (auto& ii : key2leaf)
-			ii.second = x++;
+		unordered_set<K> S(first, last);
+		vector<K> A(S.begin(), S.end());
+		sort(A.begin(), A.end()), keys = move(A), BIT.resize(keys.size() + 1, 0);
 	}
 	void insert(const K& key) {
-		auto it = key2leaf.find(key);
-		assert(it != key2leaf.end());
-		for (int x = it->second; x < BIT.size(); x += lowbit(x))
+		const auto it = lower_bound(keys.begin(), keys.end(), key);
+		assert(it != keys.end() && *it == key);
+		for (int x = 1 + distance(keys.begin(), it); x < BIT.size(); x += lowbit(x))
 			++BIT[x];
 	}
-	int rank(const K& target) const {
-		int ranking = 1;
-		auto it = key2leaf.lower_bound(target);
-		if (it != key2leaf.begin()) {
-			for (int x = (--it)->second; x > 0; x -= lowbit(x))
-				ranking += BIT[x];
+	int countSmaller(const K& target) const {
+		int count = 0;
+		const auto it = lower_bound(keys.begin(), keys.end(), target);
+		if (it != keys.begin()) {
+			for (int x = 1 + distance(keys.begin(), it - 1); x > 0; x -= lowbit(x))
+				count += BIT[x];
 		}
-		return ranking;
+		return count;
 	}
 };
 
@@ -44,8 +41,8 @@ public:
 
 		int ans = 0;
 		OrderStatisticTree<K> ost(S.begin(), S.end());
-		for (auto s : S)
-			ans += ost.rank(s - lower + 1) - ost.rank(s - upper), ost.insert(s);
+		for (const auto& s : S)
+			ans += ost.countSmaller(s - lower + 1) - ost.countSmaller(s - upper), ost.insert(s);
 		return ans;
 	}
 };
