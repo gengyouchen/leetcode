@@ -57,16 +57,16 @@ public:
 		auto x = new TreeNode();
 		x->key = key, root = insert(root, x);
 	}
-	int rank(const K& key) const {
-		int ranking = 1;
+	int countSmaller(const K& key) const {
+		int count = 0;
 		auto p = root;
 		while (p) {
 			if (key <= p->key)
 				p = p->left;
 			else
-				ranking += 1 + size(p->left), p = p->right;
+				count += 1 + size(p->left), p = p->right;
 		}
-		return ranking;
+		return count;
 	}
 	~OrderStatisticTree() { erase(root); }
 };
@@ -79,7 +79,7 @@ public:
 		vector<int> ans(n);
 		OrderStatisticTree<int> ost;
 		for (int i = n - 1; i >= 0; --i)
-			ans[i] = ost.rank(nums[i]) - 1, ost.insert(nums[i]);
+			ans[i] = ost.countSmaller(nums[i]), ost.insert(nums[i]);
 		return ans;
 	}
 };
