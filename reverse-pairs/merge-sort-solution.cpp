@@ -1,16 +1,11 @@
 class Solution {
 private:
-	template <class I, class F>
-	static void mergeSort(I first, I last, F beforeMerged) {
-		if (distance(first, last) > 1) {
-			const auto mid = first + distance(first, last) / 2;
-			mergeSort(first, mid, beforeMerged), mergeSort(mid, last, beforeMerged);
-			beforeMerged(first, mid, last), inplace_merge(first, mid, last);
-		}
-	}
+	typedef vector<int>::iterator I;
+	typedef function<void(I, I)> F;
 public:
 	/* time: O(n*log(n)), space: O(n) */
 	static int reversePairs(vector<int>& nums) {
+		const int n = nums.size();
 		int ans = 0;
 		auto beforeMerged = [&](auto first, auto mid, auto last) {
 			auto L = first;
@@ -20,7 +15,20 @@ public:
 				ans += distance(L, mid);
 			}
 		};
-		mergeSort(nums.begin(), nums.end(), beforeMerged);
+
+		vector<int> buf(n);
+		F mergeSort = [&](auto first, auto last) {
+			if (distance(first, last) > 1) {
+				const auto mid = first + distance(first, last) / 2;
+				mergeSort(first, mid), mergeSort(mid, last);
+
+				beforeMerged(first, mid, last);
+
+				const auto end = merge(first, mid, mid, last, buf.begin());
+				copy(buf.begin(), end, first);
+			}
+		};
+		mergeSort(nums.begin(), nums.end());
 		return ans;
 	}
 };
