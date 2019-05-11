@@ -1,29 +1,19 @@
+static vector<string> operator+(const vector<string>& s, char c) {
+	vector<string> ret;
+	for (const auto& it : s)
+		ret.push_back(it + c);
+	return ret;
+}
+static vector<string> operator+(char c, const vector<string>& s) {
+	vector<string> ret;
+	for (const auto& it : s)
+		ret.push_back(c + it);
+	return ret;
+}
+
 class Solution {
 private:
-	typedef unordered_set<string> S;
-	static S single(const string& s) {
-		S out;
-		out.insert(s);
-		return out;
-	}
-	static S startsWith(const S& x, char c) {
-		S out;
-		for (const auto& a : x)
-			out.insert(c + a);
-		return out;
-	}
-	static S endsWith(const S& x, char c) {
-		S out;
-		for (const auto& a : x)
-			out.insert(a + c);
-		return out;
-	}
-	static void crossJoin(S& out, const S& x, const S& y) {
-		for (const auto& a : x) {
-			for (const auto& b : y)
-				out.insert('(' + a + ')' + b);
-		}
-	}
+	typedef vector<string> S;
 	typedef function<S&(int, int)> F;
 public:
 	/*
@@ -62,35 +52,46 @@ public:
 		}
 
 		/* Backtrack every solution according to DP table */
-		const auto I = single("");
+		const S I{""};
 		vector<vector<S>> cache(n, vector<S>(n));
 		F backtrack = [&](int i, int j) -> S& {
-			S& out = cache[i][j];
+			auto& out = cache[i][j];
 			if (!out.empty())
 				return out;
 
 			if (i == j) {
-				out = (s[i] == '(' || s[i] == ')') ? I : single(string(1, s[i]));
+				out = (s[i] == '(' || s[i] == ')') ? I : S{{ s[i] }};
 			} else if (s[i] != '(') {
-				out = (s[i] == ')') ? backtrack(i + 1, j) : startsWith(backtrack(i + 1, j), s[i]);
+				out = (s[i] == ')') ? backtrack(i + 1, j) : s[i] + backtrack(i + 1, j);
 			} else if (s[j] != ')') {
-				out = (s[j] == '(') ? backtrack(i, j - 1) : endsWith(backtrack(i, j - 1), s[j]);
+				out = (s[j] == '(') ? backtrack(i, j - 1) : backtrack(i, j - 1) + s[j];
 			} else {
-				if (dp[i][j] == dp[i + 1][j])
-					out = backtrack(i + 1, j);
+				/* case 1: if the left bracket s[i] is not included */
+				for (int k = i + 1; k <= j; ++k) {
+					if (s[k] != '(') /* skip duplicates */ {
+						if (dp[i][j] == dp[k][j])
+							out = backtrack(k, j);
+						break;
+					}
+				}
+				/* case 2: if the left-most bracket s[i] is included */
 				for (int k = i + 1; k <= j; ++k) {
 					if (s[k] == ')') {
-						const int L1 = i + 1, R1 = k - 1, L2 = k + 1, R2 = j;
-						const int len = 2 + (L1 <= R1 ? dp[L1][R1] : 0) + (L2 <= R2 ? dp[L2][R2] : 0);
-						if (len == dp[i][j])
-							crossJoin(out, L1 <= R1 ? backtrack(L1, R1) : I, L2 <= R2 ? backtrack(L2, R2) : I);
+						if (k + 1 <= j && s[k + 1] == ')')
+							continue; /* skip duplicates */
+						const int len1 = (i + 1 <= k - 1) ? dp[i + 1][k - 1] : 0;
+						const int len2 = (k + 1 <= j) ? dp[k + 1][j] : 0;
+						if (1 + len1 + 1 + len2 == dp[i][j]) {
+							for (const auto& a : (i + 1 <= k - 1) ? backtrack(i + 1, k - 1) : I) {
+								for (const auto& b : (k + 1 <= j) ? backtrack(k + 1, j) : I)
+									out.push_back('(' + a + ')' + b);
+							}
+						}
 					}
 				}
 			}
 			return out;
 		};
-
-		const auto& ans = backtrack(0, n - 1);
-		return vector<string>(ans.begin(), ans.end());
+		return backtrack(0, n - 1);
 	}
 };
