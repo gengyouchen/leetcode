@@ -42,7 +42,7 @@ public:
 	 * Because alpha(x) < 5 for any value x that can be written in this physical universe,
 	 * all the disjoint-set operations take place in essentially constant time.
 	 */
-	vector<int> numIslands2(int m, int n, const vector<vector<int>>& positions) {
+	static vector<int> numIslands2(int m, int n, const vector<vector<int>>& positions) {
 		const int k = positions.size();
 		const vector<vector<int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
