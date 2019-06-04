@@ -1,34 +1,8 @@
-class Trie {
-private:
-	Trie* next[2] = {};
-	int size = 0;
-public:
-	void insert(const vector<int>& row) {
-		auto p = this;
-		for (int col : row) {
-			if (!p->next[col])
-				p->next[col] = new Trie();
-			++p->size, p = p->next[col];
-		}
-		++p->size;
-	}
-	int count(const vector<int>& row, bool complement = false) const {
-		auto p = this;
-		for (int col : row) {
-			if (complement)
-				col = 1 - col;
-			if (!p->next[col])
-				return 0;
-			p = p->next[col];
-		}
-		return p->size;
-	}
-};
-
 class Solution {
 public:
 	/* time: O(n^2), space: O(n^2) */
 	static int maxEqualRowsAfterFlips(const vector<vector<int>>& matrix) {
+		const int m = matrix.size(), n = matrix[0].size();
 		/*
 		 * Key Observation:
 		 * If row[i] != row[j] initially,
@@ -38,10 +12,22 @@ public:
 		 * (1) row[a] becomes all values 0 IFF row[i] == row[a] initially
 		 * (2) row[b] becomes all values 1 IFF row[i] == ~row[b] initially
 		 */
-		Trie dict;
+		unordered_map<string, int> h;
 		int ans = 0;
-		for (const auto& row : matrix)
-			dict.insert(row), ans = max(ans, dict.count(row) + dict.count(row, true));
+		string key(n, '?'), inv(n, '?');
+		for (const auto& row : matrix) {
+			for (int i = 0; i < n; ++i) {
+				if (row[i])
+					key[i] = '1', inv[i] = '0';
+				else
+					key[i] = '0', inv[i] = '1';
+			}
+			int nEqual = ++h[key];
+			const auto it = h.find(inv);
+			if (it != h.end())
+				nEqual += it->second;
+			ans = max(ans, nEqual);
+		}
 		return ans;
 	}
 };
