@@ -1,32 +1,32 @@
 class Solution {
-private:
-	template <class I, class T, class F>
-	void sortedTwoSum(I first, I last, T target, F found) {
-		while (last - first > 1) {
-			T sum = *first + *(last - 1);
-			if (sum < target)
-				++first;
-			else if (sum > target)
-				--last;
-			else
-				found(first, --last);
-		}
-	}
 public:
 	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input & output itself) */
-	vector<vector<int>> threeSum(vector<int>& nums) {
+	static vector<vector<int>> threeSum(vector<int>& nums) {
+		const int n = nums.size();
 		make_heap(nums.begin(), nums.end());
 		sort_heap(nums.begin(), nums.end());
+
+		auto twoSum = [&](int L, int R, int target, auto found) {
+			while (L < R) {
+				const int sum = nums[L] + nums[R];
+				if (sum < target)
+					++L;
+				else if (sum > target)
+					--R;
+				else
+					found(L, R), --R;
+			}
+		};
+
 		vector<vector<int>> ans;
-		for (auto z = nums.begin(); z != nums.end(); ++z) {
-			if (z != nums.end() - 1 && *z == *(z + 1))
-				continue; /* skip duplicates */
-			int complement = -*z;
-			sortedTwoSum(nums.begin(), z, complement, [&](auto x, auto y) {
-				if (!ans.empty() && ans.back()[0] == *x && ans.back()[1] == *y)
-					return; /* skip duplicates */
-				ans.push_back({*x, *y, *z});
-			});
+		for (int i = 2; i < n; ++i) {
+			if (i == n - 1 || nums[i] != nums[i + 1]) {
+				auto found = [&](int L, int R) {
+					if (ans.empty() || ans.back()[0] != nums[L] || ans.back()[1] != nums[R])
+						ans.push_back({nums[L], nums[R], nums[i]});
+				};
+				twoSum(0, i - 1, -nums[i], found);
+			}
 		}
 		return ans;
 	}
