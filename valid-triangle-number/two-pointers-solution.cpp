@@ -1,26 +1,25 @@
 class Solution {
-private:
-	template <class I, class T>
-	int sortedTwoSumLarger(I first, I last, T target) {
-		int ans = 0;
-		while (last - first > 1) {
-			T sum = *first + *(last - 1);
-			if (sum > target)
-				ans += --last - first;
-			else
-				++first;
-		}
-		return ans;
-	}
 public:
 	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input itself) */
-	int triangleNumber(vector<int>& nums) {
+	static int triangleNumber(vector<int>& nums) {
+		const int n = nums.size();
 		make_heap(nums.begin(), nums.end());
 		sort_heap(nums.begin(), nums.end());
+
+		auto twoSumLarger = [&](int L, int R, int target) {
+			int count = 0;
+			while (L < R) {
+				if (nums[L] + nums[R] > target)
+					count += R - L, --R;
+				else
+					++L;
+			}
+			return count;
+		};
+
 		int ans = 0;
-		for (auto z = nums.begin(); z != nums.end(); ++z)
-			/* Apply the triangle inequality */
-			ans += sortedTwoSumLarger(nums.begin(), z, *z);
+		for (int i = 2; i < n; ++i)
+			ans += twoSumLarger(0, i - 1, nums[i]);
 		return ans;
 	}
 };
