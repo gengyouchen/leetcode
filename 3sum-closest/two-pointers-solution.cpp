@@ -1,36 +1,32 @@
 class Solution {
-private:
-	template <class I, class T, class F>
-	void sortedTwoSumClosest(I first, I last, T target, F found) {
-		I ans[2];
-		T d = numeric_limits<T>::max();
-		while (last - first > 1) {
-			T sum = *first + *(last - 1);
-			if (abs(sum - target) < d)
-				d = abs(sum - target), ans[0] = first, ans[1] = last - 1;
-			if (sum < target)
-				++first;
-			else if (sum > target)
-				--last;
-			else
-				break;
-		}
-		if (d < numeric_limits<T>::max())
-			found(ans[0], ans[1]);
-	}
 public:
 	/* time: O(n^2), space: O(1) auxiliary (i.e. does not count input itself) */
-	int threeSumClosest(vector<int>& nums, int target) {
+	static int threeSumClosest(vector<int>& nums, int target) {
+		const int n = nums.size();
 		make_heap(nums.begin(), nums.end());
 		sort_heap(nums.begin(), nums.end());
-		int ans, d = INT_MAX;
-		for (auto z = nums.begin(); z != nums.end(); ++z) {
-			int complement = target - *z;
-			sortedTwoSumClosest(nums.begin(), z, complement, [&](auto x, auto y) {
-				int sum = *x + *y + *z;
+
+		auto twoSumClosest = [&](int L, int R, int target) {
+			int closest, d = INT_MAX;
+			while (L < R) {
+				const int sum = nums[L] + nums[R];
 				if (abs(sum - target) < d)
-					d = abs(sum - target), ans = sum;
-			});
+					d = abs(sum - target), closest = sum;
+				if (sum < target)
+					++L;
+				else if (sum > target)
+					--R;
+				else
+					break;
+			}
+			return closest;
+		};
+
+		int ans, d = INT_MAX;
+		for (int i = 2; i < n; ++i) {
+			const int sum = nums[i] + twoSumClosest(0, i - 1, target - nums[i]);
+			if (abs(sum - target) < d)
+				d = abs(sum - target), ans = sum;
 		}
 		return ans;
 	}
