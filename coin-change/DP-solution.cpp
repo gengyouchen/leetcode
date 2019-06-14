@@ -3,7 +3,7 @@ public:
 	/* time: O(amount * len(coins)), space: O(min(amount, max(coins))) */
 	static int coinChange(const vector<int>& coins, int amount) {
 		if (coins.empty())
-			return amount == 0;
+			return (amount == 0) ? 0 : -1;
 		const int W = 1 + min(amount, *max_element(coins.begin(), coins.end()));
 		vector<int> _dp(W);
 
