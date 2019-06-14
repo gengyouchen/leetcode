@@ -3,7 +3,7 @@ private:
 	unordered_map<int, vector<int>> num2indices;
 	vector<pair<int, int>> nums;
 	void swapAt(int i, int j) {
-		if (nums[i] != nums[j]) {
+		if (i != j) {
 			num2indices[nums[i].first][nums[i].second] = j;
 			num2indices[nums[j].first][nums[j].second] = i;
 			swap(nums[i], nums[j]);
