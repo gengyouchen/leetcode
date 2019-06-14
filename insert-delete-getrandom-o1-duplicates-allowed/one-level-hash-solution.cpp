@@ -3,8 +3,11 @@ private:
 	unordered_map<int, vector<int>> num2indices;
 	vector<pair<int, int>> nums;
 	void swapAt(int i, int j) {
-		swap(nums[i], nums[j]);
-		swap(num2indices[nums[i].first][nums[i].second], num2indices[nums[j].first][nums[j].second]);
+		if (nums[i] != nums[j]) {
+			num2indices[nums[i].first][nums[i].second] = j;
+			num2indices[nums[j].first][nums[j].second] = i;
+			swap(nums[i], nums[j]);
+		}
 	}
 public:
 	/* time: O(1), space: O(1) */
@@ -24,7 +27,8 @@ public:
 			return false;
 		auto& indices = it->second;
 
-		swapAt(indices.back(), nums.size() - 1), indices.pop_back(), nums.pop_back();
+		const int victim = indices.back();
+		swapAt(victim, nums.size() - 1), indices.pop_back(), nums.pop_back();
 		if (indices.empty())
 			num2indices.erase(it);
 		return true;
