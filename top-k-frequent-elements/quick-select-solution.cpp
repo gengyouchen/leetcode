@@ -12,7 +12,7 @@ public:
 		vector<PII> freqs;
 		for (const auto& it : num2freq)
 			freqs.emplace_back(it.second, it.first);
-		nth_element(freqs.begin(), freqs.begin() + k, freqs.end(), greater<PII>());
+		nth_element(freqs.begin(), freqs.begin() + (k - 1), freqs.end(), greater<PII>());
 
 		vector<int> ans(k);
 		for (int i = 0; i < k; ++i)
