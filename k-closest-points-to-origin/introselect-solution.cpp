@@ -1,6 +1,9 @@
 class Solution {
 public:
-	/* time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself) */
+	/*
+	 * time: O(n), space: O(1) auxiliary (i.e. does not count input & output itself),
+	 * assuming introselect doesn't fall back to Median of Medians, which requires O(log(n)) space
+	 */
 	static vector<vector<int>> kClosest(vector<vector<int>>& points, int K) {
 		auto comp = [&](const auto& a, const auto& b) {
 			return (a[0] * a[0] + a[1] * a[1]) < (b[0] * b[0] + b[1] * b[1]);
