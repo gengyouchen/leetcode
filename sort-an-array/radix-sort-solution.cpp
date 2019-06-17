@@ -9,7 +9,7 @@ private:
 		for (auto it = last; it != first; --it)
 			*(output + --count[slot(it - 1)]) = *(it - 1);
 	}
-	template <class I, int K = 256, int D = 4>
+	template <class I, int D = 4>
 	static void radixSort(I first, I last, I output) {
 		auto end = output + distance(first, last);
 		for (int d = 0; d < D; ++d) {
@@ -24,7 +24,10 @@ private:
 		copy(first, last, output);
 	}
 public:
-	/* time: O(n), space: O(n) */
+	/*
+	 * time: O(d*(n+k)), space: O(n+k),
+	 * where d = # of digits per number, k = # of possible values per digit
+	 */
 	static vector<int> sortArray(vector<int>& nums) {
 		const int n = nums.size();
 		vector<int> ans(n);
