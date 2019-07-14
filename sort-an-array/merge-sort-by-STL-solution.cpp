@@ -2,7 +2,9 @@ class Solution {
 private:
 	template <class I>
 	static void mergeSort(I first, I last, I output) {
-		if (last - first > 1) {
+		if (last - first == 1) {
+			*output = *first;
+		} else if (last - first > 1) {
 			const auto mid = first + (last - first) / 2;
 			mergeSort(first, mid, output), mergeSort(mid, last, output);
 
@@ -11,7 +13,7 @@ private:
 		}
 	}
 public:
-	/* time: O(n*log(n)), space: O(log(n)) auxiliary (i.e. does not count input & output itself) */
+	/* time: O(n*log(n)), space: O(n) */
 	static vector<int> sortArray(vector<int>& nums) {
 		const int n = nums.size();
 		vector<int> ans(n);
