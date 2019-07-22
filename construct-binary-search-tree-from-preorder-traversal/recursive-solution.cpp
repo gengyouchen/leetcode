@@ -3,19 +3,18 @@ public:
 	/* time: O(n), space: O(n) */
 	static TreeNode* bstFromPreorder(const vector<int>& preorder) {
 		const int n = preorder.size();
-		int i = 0;
+		int step = 0;
 
 		using F = function<TreeNode*(const TreeNode*)>;
-		F build = [&](auto succ) {
-			TreeNode *p = NULL;
-			if (i == n)
-				return p;
-			if (succ && preorder[i] > succ->val)
-				return p;
-			p = new TreeNode(preorder[i++]), p->left = build(p), p->right = build(succ);
-			return p;
+		F construct = [&](const TreeNode *succ) -> TreeNode* {
+			if (step == n || succ && preorder[step] > succ->val)
+				return NULL;
+
+			TreeNode *curr = new TreeNode(preorder[step++]);
+			curr->left = construct(curr), curr->right = construct(succ);
+			return curr;
 		};
 
-		return build(NULL);
+		return construct(NULL);
 	}
 };
