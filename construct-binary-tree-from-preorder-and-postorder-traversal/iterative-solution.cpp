@@ -1,23 +1,26 @@
 class Solution {
 public:
 	/* time: O(n), space: O(n) */
-	TreeNode* constructFromPrePost(const vector<int>& pre, const vector<int>& post) {
-		stack<TreeNode*> parents;
-		TreeNode *curr = NULL, *ans = NULL;
-		auto discovery = pre.begin(), finishing = post.begin();
-		while (finishing != post.end()) {
-			if (curr && curr->val == *finishing) {
-				++finishing, curr = parents.top(), parents.pop();
-			} else {
-				auto child = new TreeNode(*discovery++);
-				if (!curr)
-					ans = child;
-				else if (!curr->left)
-					curr->left = child;
+	static TreeNode* constructFromPrePost(const vector<int>& pre, const vector<int>& post) {
+		const int n = pre.size();
+		TreeNode *ans = NULL;
+		stack<TreeNode*> parent;
+
+		for (int i = 0, j = 0; i < n; ++i) {
+			auto curr = new TreeNode(pre[i]);
+			if (!ans)
+				ans = curr;
+
+			while (!parent.empty() && post[j] == parent.top()->val)
+				parent.pop(), ++j;
+
+			if (!parent.empty()) {
+				if (parent.top()->left)
+					parent.top()->right = curr;
 				else
-					curr->right = child;
-				parents.push(curr), curr = child;
+					parent.top()->left = curr;
 			}
+			parent.push(curr);
 		}
 		return ans;
 	}
