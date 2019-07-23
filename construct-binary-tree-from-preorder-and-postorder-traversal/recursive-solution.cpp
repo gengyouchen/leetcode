@@ -6,8 +6,8 @@ public:
 		int i = 0, j = 0;
 
 		using F = function<TreeNode*(const TreeNode*)>;
-		F construct = [&](auto succ) {
-			if (i == n || succ && post[j] == succ->val)
+		F construct = [&](auto parent) {
+			if (i == n || parent && post[j] == parent->val)
 				return (TreeNode *)NULL;
 
 			auto curr = new TreeNode(pre[i++]);
