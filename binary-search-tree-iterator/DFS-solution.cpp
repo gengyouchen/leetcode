@@ -1,25 +1,26 @@
 class BSTIterator {
 private:
-	const TreeNode *root;
-	stack<const TreeNode*> succ;
+	using T = const TreeNode*;
+	T p;
+	stack<T> succ;
 public:
 	/* time: O(1), space: O(1) auxiliary (i.e. does not count stack itself) */
-	BSTIterator(const TreeNode* root) : root(root) { }
+	BSTIterator(T root) : p(root) {}
 
 	/* time: O(1) amortized, space: O(1) auxiliary (i.e. does not count stack itself) */
 	int next() {
 		if (!hasNext())
 			return -1; /* failed */
-		root = succ.top(), succ.pop();
-		const int val = root->val;
-		root = root->right;
+		p = succ.top(), succ.pop();
+		const int val = p->val;
+		p = p->right;
 		return val;
 	}
 
 	/* time: O(1) amortized, space: O(1) auxiliary (i.e. does not count stack itself) */
 	bool hasNext() {
-		while (root)
-			succ.push(root), root = root->left;
+		while (p)
+			succ.push(p), p = p->left;
 		return !succ.empty();
 	}
 };
