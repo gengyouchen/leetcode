@@ -16,14 +16,14 @@ private:
 		return sqrt(w * h);
 	}
 public:
-	/* time: O(n^2*log(n)), space: O(n^2), assuming sqrt(x) is O(1) time */
+	/* time: O(n^2 * log(n)), space: O(n^2), assuming sqrt(x) is O(1) time */
 	static double minAreaFreeRect(const vector<vector<int>>& points) {
 		const int n = points.size();
 		vector<Line> diagonals;
 		for (int i = 0; i < n; ++i) {
 			for (int j = i + 1; j < n; ++j) {
-				Point start(points[i][0], points[i][1]), end(points[j][0], points[j][1]);
-				diagonals.emplace_back(start, end);
+				Point a(points[i][0], points[i][1]), b(points[j][0], points[j][1]);
+				diagonals.emplace_back(a, b);
 			}
 		}
 
