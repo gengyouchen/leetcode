@@ -1,7 +1,7 @@
 class Solution {
 public:
 	/*
-	 * time: O((log(n/k) + k^2) * n/k) ~= O(n ^ 1.5) if k ~= sqrt(n), space: O(n),
+	 * time: O(n + (log(n/k) + k^2) * n/k) ~= O(n ^ 1.5) if k ~= sqrt(n), space: O(n),
 	 * where n = # of points, k = # of rows containing points,
 	 * assuming n points are distributed evenly on k rows
 	 */
