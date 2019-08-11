@@ -6,10 +6,13 @@ public:
 	 * assuming n points are distributed evenly on k rows
 	 */
 	static int minAreaRect(const vector<vector<int>>& points) {
+		const int n = points.size();
 		unordered_map<int, vector<int>> rows;
 		for (const auto& point : points)
 			rows[point[0]].push_back(point[1]);
 		if (rows.size() < 2)
+			return 0;
+		if (rows.size() == n)
 			return 0;
 
 		for (auto& row : rows) {
