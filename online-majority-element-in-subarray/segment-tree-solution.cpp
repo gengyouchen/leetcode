@@ -2,7 +2,7 @@ class RangeMajorityVoteQuery {
 private:
 	/* Use Boyer–Moore majority vote algorithm. See LeetCode 169 - Majority Element */
 	struct MajorityVote { int num, vote; };
-	static MajorityVote summarize(const MajorityVote& a, const MajorityVote& b) {
+	static MajorityVote merge(const MajorityVote& a, const MajorityVote& b) {
 		MajorityVote ret;
 		ret.num = (a.vote > b.vote) ? a.num : b.num;
 		ret.vote = (a.num == b.num) ? (a.vote + b.vote) : abs(a.vote - b.vote);
@@ -23,18 +23,18 @@ public:
 			segTree[nLeaf + i] = {A[i], 1};
 
 		for (int x = nLeaf - 1; x > 0; --x)
-			segTree[x] = summarize(segTree[x * 2], segTree[x * 2 + 1]);
+			segTree[x] = merge(segTree[x * 2], segTree[x * 2 + 1]);
 	}
 	int query(int i, int j) const {
 		const int nLeaf = segTree.size() / 2;
 		int x = nLeaf + i, y = nLeaf + j;
 
-		auto ret = summarize(segTree[x], segTree[y]);
+		auto ret = merge(segTree[x], segTree[y]);
 		while (x / 2 != y / 2) {
 			if (!(x % 2))
-				ret = summarize(ret, segTree[x + 1]);
+				ret = merge(ret, segTree[x + 1]);
 			if (y % 2)
-				ret = summarize(ret, segTree[y - 1]);
+				ret = merge(ret, segTree[y - 1]);
 			x /= 2, y /= 2;
 		}
 

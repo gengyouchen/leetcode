@@ -1,4 +1,5 @@
 class RangeMajorityVoteQuery {
+	/* Use Boyer–Moore majority vote algorithm. See LeetCode 169 - Majority Element */
 	private static class MajorityVote {
 		public int num = 0, vote = 0;
 	}
@@ -9,6 +10,7 @@ class RangeMajorityVoteQuery {
 		return ret;
 	}
 
+	/* Use Segment Tree. See LeetCode 307 - Range Sum Query - Mutable */
 	private MajorityVote[] segTree;
 	public RangeMajorityVoteQuery(int[] A) {
 		final int n = A.length;
@@ -74,7 +76,7 @@ class MajorityChecker {
 		}
 		return L;
 	}
-	/* time: O(n), space: O(n) */
+	/* time: O(n), space: O(1) auxiliary (i.e. does not count tree and hash table itself) */
 	public MajorityChecker(int[] arr) {
 		final int n = arr.length;
 		q = new RangeMajorityVoteQuery(arr);
@@ -86,7 +88,7 @@ class MajorityChecker {
 			idx.add(i);
 		}
 	}
-	/* time: O(log(n)), space: O(1) auxiliary */
+	/* time: O(log(n)), space: O(1) auxiliary (i.e. does not count tree and hash table itself) */
 	public int query(int left, int right, int threshold) {
 		final int majorityVote = q.query(left, right);
 		if (majorityVote == -1)
