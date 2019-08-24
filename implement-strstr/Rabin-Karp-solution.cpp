@@ -23,8 +23,8 @@ public:
 	/* time: O(n+m) expected, space: O(1), where n = |haystack|, m = |needle| */
 	static int strStr(const string& haystack, const string& needle) {
 		const int m = needle.size(), n = haystack.size();
-		if (m > n)
-			return -1;
+		if (m == 0)
+			return 0;
 
 		const RollingHash goal(needle.begin(), needle.end());
 		RollingHash curr(haystack.begin(), haystack.begin() + m);
