@@ -1,17 +1,17 @@
 class Solution {
 private:
-	static vector<int> getLPSArray(const string& str) {
+	static vector<int> getKMPTable(const string& str) {
 		const int n = str.size();
-		vector<int> LPS(n);
+		vector<int> prefix(n);
 		int len = 0;
 		for (int i = 1; i < n; ++i) {
 			while (len > 0 && str[len] != str[i])
-				len = LPS[len - 1];
+				len = prefix[len - 1];
 			if (str[len] == str[i])
 				++len;
-			LPS[i] = len;
+			prefix[i] = len;
 		}
-		return LPS;
+		return prefix;
 	}
 public:
 	/* time: O(n+m), space: O(m), where n = |haystack|, m = |needle| */
@@ -20,15 +20,15 @@ public:
 		if (m == 0)
 			return 0;
 
-		const auto LPS = getLPSArray(needle);
+		const auto prefix = getKMPTable(needle);
 		int len = 0;
 		for (int i = 0; i < n; ++i) {
 			while (len > 0 && needle[len] != haystack[i])
-				len = LPS[len - 1];
+				len = prefix[len - 1];
 			if (needle[len] == haystack[i])
 				++len;
 			if (len == m)
-				return i - len + 1; /* found */
+				return i - (len - 1); /* found */
 		}
 		return -1; /* not found */
 	}
