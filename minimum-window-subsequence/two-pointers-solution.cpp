@@ -40,7 +40,7 @@ public:
 		const int n = S.size(), m = T.size();
 
 		int L = 0, ansPos = -1, ansLen = INT_MAX;
-		while (L + m < n) {
+		while (L < n) {
 			const int R = forwardMatch(S, L, T);
 			if (R == -1)
 				break;
