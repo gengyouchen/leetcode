@@ -12,7 +12,7 @@ public:
 		vector<bool> visited(n);
 		auto visit = [&](int src) {
 			stack<int> S;
-			S.push(src);
+			S.push(src), visited[src] = true;
 			while (!S.empty()) {
 				const int u = S.top(), row = stones[u][0], col = stones[u][1];
 				S.pop();

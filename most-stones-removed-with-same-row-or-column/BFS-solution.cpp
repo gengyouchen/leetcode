@@ -12,7 +12,7 @@ public:
 		vector<bool> visited(n);
 		auto visit = [&](int src) {
 			queue<int> Q;
-			Q.push(src);
+			Q.push(src), visited[src] = true;
 			while (!Q.empty()) {
 				const int u = Q.front(), row = stones[u][0], col = stones[u][1];
 				Q.pop();
