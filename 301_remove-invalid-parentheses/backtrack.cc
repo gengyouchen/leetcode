@@ -1,7 +1,7 @@
 class Solution {
  public:
   /*
-   * time: O(2^n), extra space: O(n) (i.e. does not count output size)
+   * time: O(n * 2^n), extra space: O(n) (i.e. does not count output size)
    *
    * See also:
    *    921. Minimum Add to Make Parentheses Valid
