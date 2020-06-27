@@ -13,7 +13,8 @@ class Solution {
    *   in future forward_match calls, we NEVER compare S[i] with T[x] again.
    *   (i.e. S[i] will be compared with T[y], where y > x)
    *
-   * Therefore, S[i] is only compared with T at most 2*m times, NOT n times.
+   * Therefore, S[i] is only compared with T at most 2*m times, NOT n times,
+   *   so the total time complexity is just O(n * m).
    */
   string minWindow(const string& S, const string& T) {
     const int n = S.size(), m = T.size();
@@ -34,7 +35,7 @@ class Solution {
       return -1;
     };
 
-    int pos = -1, len = INT_MAX;
+    int ans_pos = -1, ans_len = INT_MAX;
     for (int L = 0; L < n; ++L) {
       const int R = forward_match(L);
       if (R == -1) break;
@@ -42,10 +43,11 @@ class Solution {
       L = backward_match(R);
       /* L is the rightmost L such that forward_match(L) is still the same R */
 
-      if (R - L + 1 < len) len = R - L + 1, pos = L;
+      const int len = R - L + 1;
+      if (len < ans_len) ans_len = len, ans_pos = L;
     }
-    if (pos == -1) return "";
+    if (ans_pos == -1) return "";
 
-    return S.substr(pos, len);
+    return S.substr(ans_pos, ans_len);
   }
 };
