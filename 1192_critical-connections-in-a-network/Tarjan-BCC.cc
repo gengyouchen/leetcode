@@ -3,6 +3,9 @@ class Solution {
   /*
    * time: O(n + m), space: O(n + m),
    *   where n = # of servers, m = # of connections
+   *
+   * See also:
+   *   1489. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree
    */
   vector<vector<int>> criticalConnections(
       int n, const vector<vector<int>>& connections) {
@@ -14,7 +17,7 @@ class Solution {
     }
 
     vector<vector<int>> ans;
-    vector<int> low(n); /* for Tarjan's algorithm */
+    vector<int> low(n); /* for Tarjan's BCC algorithm */
     int timestamp = 0;
 
     using F = function<void(int, int)>;
