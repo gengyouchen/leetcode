@@ -16,7 +16,7 @@ class Solution {
     vector<string> ans;
     vector<int> removed_L, removed_R;
 
-    auto backtrack = [&](const auto& backtrack, int pos, int n_opened) {
+    auto backtrack = [&](const auto& backtrack, int pos, int n_opened) -> void {
       if (pos == n) {
         if (n_opened > 0) return;
         string buf;
