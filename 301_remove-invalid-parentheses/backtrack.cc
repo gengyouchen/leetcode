@@ -1,7 +1,8 @@
 class Solution {
  public:
   /*
-   * time: O(n * 2^n), extra space: O(n) (i.e. does not count output size)
+   * time: O(n * 2^n), extra space: O(n) (i.e. does not count output size),
+   *   where n = s.size()
    *
    * See also:
    *     32. Longest Valid Parentheses
@@ -9,14 +10,13 @@ class Solution {
    *   1249. Minimum Remove to Make Valid Parentheses
    */
   vector<string> removeInvalidParentheses(const string& s) {
-    const int n = s.size();
-    const auto quota = minRemoveToMakeValid(s);
+    int n = s.size();
+    auto quota = minRemoveToMakeValid(s);
 
     vector<string> ans;
     vector<int> removed_L, removed_R;
 
-    using F = function<void(int, int)>;
-    F backtrack = [&](int pos, int n_opened) {
+    auto backtrack = [&](const auto& backtrack, int pos, int n_opened) {
       if (pos == n) {
         if (n_opened > 0) return;
         string buf;
@@ -41,13 +41,13 @@ class Solution {
             if (pos == 0 || s[pos - 1] != '(' ||
                 (!removed_L.empty() && removed_L.back() == pos - 1)) {
               removed_L.push_back(pos);
-              backtrack(pos + 1, n_opened);
+              backtrack(backtrack, pos + 1, n_opened);
               removed_L.pop_back();
             }
           }
 
           /* try to preserve '(' */
-          backtrack(pos + 1, n_opened + 1);
+          backtrack(backtrack, pos + 1, n_opened + 1);
           break;
 
         case ')':
@@ -56,28 +56,26 @@ class Solution {
             if (pos == 0 || s[pos - 1] != ')' ||
                 (!removed_R.empty() && removed_R.back() == pos - 1)) {
               removed_R.push_back(pos);
-              backtrack(pos + 1, n_opened);
+              backtrack(backtrack, pos + 1, n_opened);
               removed_R.pop_back();
             }
           }
 
           /* try to preserve ')' */
-          if (n_opened > 0) backtrack(pos + 1, n_opened - 1);
+          if (n_opened > 0) backtrack(backtrack, pos + 1, n_opened - 1);
           break;
 
         default:
-          backtrack(pos + 1, n_opened);
+          backtrack(backtrack, pos + 1, n_opened);
           break;
       }
     };
-    backtrack(0, 0);
+    backtrack(backtrack, 0, 0);
     return ans;
   }
 
  private:
-  /*
-   * Reused the solution from 1249. Minimum Remove to Make Valid Parentheses
-   */
+  /* Reused the solution from 1249. Minimum Remove to Make Valid Parentheses */
   pair<int, int> minRemoveToMakeValid(const string& s) {
     int n_removed_L = 0, n_removed_R = 0;
 
