@@ -10,7 +10,7 @@ class Solution {
   vector<vector<int>> criticalConnections(
       int n, const vector<vector<int>>& connections) {
     vector<list<int>> adj_lists(n);
-    for (auto& connection : connections) {
+    for (const auto& connection : connections) {
       int u = connection[0], v = connection[1];
       adj_lists[u].push_back(v);
       adj_lists[v].push_back(u);
@@ -26,7 +26,7 @@ class Solution {
 
       for (int v : adj_lists[u]) {
         if (v == predecessor) continue;
-        if (!low[v]) {
+        if (!low[v]) /* not yet visited */ {
           dfs(dfs, v, u);
           if (discovery_time < low[v]) /* found a bridge */
             ans.push_back({u, v});
@@ -35,9 +35,10 @@ class Solution {
       }
     };
 
-    for (int i = 0; i < n; ++i)
-      if (!low[i]) dfs(dfs, i, -1);
-
+    for (int i = 0; i < n; ++i) {
+      if (!low[i]) /* not yet visited */
+        dfs(dfs, i, -1);
+    }
     return ans;
   }
 };
