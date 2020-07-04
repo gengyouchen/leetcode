@@ -15,42 +15,42 @@ class Solution {
 
     vector<vector<int>> ans(2);
     DisjointSet ds(n);
-    for (auto it = sorted_edges.begin(); it != sorted_edges.end(); ++it) {
-      const auto& edge_ids = it->second;
-
+    for (const auto& [weight, edge_ids] : sorted_edges) {
       /*
        * When Kruskal's algorithm handles mutiple edges with the same weight,
        *   the edges which are allowed to be in a MST (minimum spanning tree)
-       *   are the edges connecting two distinct groups.
+       *   are the edges connecting two existing connected components.
        *
        * By using these MST-allowed edges to construct a new undirected graph,
-       *   where each vertex represents a distinct group, we can know:
+       *   where each vertex represents a existing connected components,
+       *   we can know:
        *   1. bridges: critical edges
        *   2. non-bridges: pseudo-critical edges
+       *
+       * To find bridges in an undirected graph, we use Tarjan's BCC algorithm
+       *   modified from 1192. Critical Connections in a Network
        */
-      unordered_set<int> MST_edge_ids;
-      list<vector<int>> connections;
+      unordered_set<int> allowed_edge_ids;
+      list<array<int, 3>> connections;
       for (int i : edge_ids) {
-        int group_u = ds.FindSet(edges[i][0]);
-        int group_v = ds.FindSet(edges[i][1]);
-        if (group_u != group_v) {
-          MST_edge_ids.insert(i);
-          connections.push_back({group_u, group_v, i});
+        int u = edges[i][0], v = edges[i][1];
+        if (ds.FindSet(u) != ds.FindSet(v)) {
+          allowed_edge_ids.insert(i);
+          connections.push_back({ds.FindSet(u), ds.FindSet(v), i});
         }
       }
 
       auto critical_edge_ids = criticalConnections(connections);
       for (int i : critical_edge_ids) {
         ans[0].push_back(i);
-        MST_edge_ids.erase(i);
+        allowed_edge_ids.erase(i);
       }
-      for (int i : MST_edge_ids) ans[1].push_back(i);
+      for (int i : allowed_edge_ids) ans[1].push_back(i);
 
       /* Perform Kruskal's algorithm as usual */
       for (int i : edge_ids) {
-        int group_u = ds.FindSet(edges[i][0]);
-        int group_v = ds.FindSet(edges[i][1]);
-        if (group_u != group_v) ds.Union(group_u, group_v);
+        int u = edges[i][0], v = edges[i][1];
+        if (ds.FindSet(u) != ds.FindSet(v)) ds.Union(u, v);
       }
     }
     return ans;
@@ -60,14 +60,13 @@ class Solution {
   /*
    * Modified the solution from 1192. Critical Connections in a Network:
    *   1. Discretize vertex IDs to make sure O(|V| + |E|) is just O(|E|)
-   *   2. Treat duplicate connections as non-critical edge
+   *   2. Treat duplicate edges as non-critical edges
    */
-  list<int> criticalConnections(const list<vector<int>>& connections) {
+  list<int> criticalConnections(const list<array<int, 3>>& connections) {
     unordered_map<int, unordered_map<int, int>> adj_lists;
-    for (auto& connection : connections) {
-      int u = connection[0], v = connection[1], edge_id = connection[2];
-      if (adj_lists[u].count(v)) /* duplicate edges */
-        adj_lists[u][v] = adj_lists[v][u] = -1;
+    for (const auto& [u, v, edge_id] : connections) {
+      if (adj_lists[u].count(v) > 0)
+        adj_lists[u][v] = adj_lists[v][u] = -1; /* duplicate */
       else
         adj_lists[u][v] = adj_lists[v][u] = edge_id;
     }
@@ -77,24 +76,24 @@ class Solution {
     int timestamp = 0;
 
     auto dfs = [&](const auto& dfs, int u, int predecessor) -> void {
-      int discovery_time = ++timestamp;
-      low[u] = discovery_time;
+      int discovery_time = low[u] = ++timestamp;
 
-      for (auto& adj : adj_lists[u]) {
-        int v = adj.first, edge_id = adj.second;
+      for (const auto& [v, edge_id] : adj_lists[u]) {
         if (v == predecessor) continue;
-        if (!low[v]) {
+        if (!low[v]) /* not yet visited */ {
           dfs(dfs, v, u);
-          if (discovery_time < low[v]) /* found a bridge */
-            if (edge_id != -1) critical_edge_ids.push_back(edge_id);
+          if (discovery_time < low[v]) /* found a bridge */ {
+            if (edge_id != -1) /* not duplicate */
+              critical_edge_ids.push_back(edge_id);
+          }
         }
         low[u] = min(low[u], low[v]);
       }
     };
 
-    for (auto& adj_list : adj_lists) {
-      int u = adj_list.first;
-      if (!low[u]) dfs(dfs, u, -1);
+    for (const auto& [u, adj_list] : adj_lists) {
+      if (!low[u]) /* not yet visited */
+        dfs(dfs, u, -1);
     }
     return critical_edge_ids;
   }
