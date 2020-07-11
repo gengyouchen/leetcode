@@ -11,26 +11,28 @@ class Solution {
     int n = heights.size(), ans = 0;
     stack<int> mono;
     for (int i = 0; i <= n; ++i) {
-      int curr = (i < n) ? heights[i] : 0; /* appended a zero bar */
+      int curr = (i < n) ? heights[i] : 0; /* appended a zero bar at the end */
       while (!mono.empty() && heights[mono.top()] >= curr) {
-        int j = mono.top();
+        int x = mono.top();
         mono.pop();
-        int k = mono.empty() ? -1 : mono.top();
+        int L = mono.empty() ? -1 : mono.top(), R = i;
         /*
-         * The area of the largest rectangle using bar j as its height is:
-         *   A = heights[j] * (i - k - 1), where k < j < i,
-         *   and bar k is the last bar which is shorter than bar j,
-         *   and bar i is the first bar which is shorter than bar j.
+         * The area of the largest rectangle using bar x as its height is A(x):
+         *   A(x) = heights[x] * (R - L - 1),
+         *     where L < x < R,
+         *     bar L is the last bar which is shorter than bar x,
+         *     bar R is the first bar which is shorter than bar x.
          *
-         * Notice that: for our monotonic stack approach,
-         *   our bar i is the first bar which is not taller than bar j.
+         * Notice that in our monotonic stack approach,
+         *   our bar R is the first bar which is not taller than bar x.
          *
-         * If heights[j] == heights[i], our A is not correctly computed.
-         *
-         * But this won't affect ans because in the future iterations,
-         *   once heights[j] > heights[i], we can correctly get that A.
+         * We don't need to worry if heights[x] == heights[R],
+         *   our computed A(x) will be smaller than the correct A(x)
+         *   because this won't affect the final answer:
+         *     If heights[x] == heights[R], the correct A(x) == A(R).
+         *     The final answer will pick A(R) in future iterations.
          */
-        int A = heights[j] * (i - k - 1);
+        int A = heights[x] * (R - L - 1);
         ans = max(ans, A);
       }
       mono.push(i);
