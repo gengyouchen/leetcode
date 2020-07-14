@@ -7,7 +7,7 @@ class Solution {
    * If we allow some input numbers < 0, it becomes a harder problem:
    *   862. Shortest Subarray with Sum at Least K
    */
-  int minSubArrayLen(int s, vector<int>& nums) {
+  int minSubArrayLen(int s, const vector<int>& nums) {
     int n = nums.size(), L = -1, sum = 0, ans = INT_MAX;
     for (int R = 0; R < n; ++R) {
       /*
