@@ -7,13 +7,21 @@ class Solution {
    * If we allow some input numbers < 0, it becomes a harder problem:
    *   862. Shortest Subarray with Sum at Least K
    */
-  int minSubArrayLen(int s, const vector<int>& nums) {
-    int n = nums.size(), R = 0, sum = 0, ans = INT_MAX;
-    for (int L = 0; L < n; ++L) {
-      while (sum < s && R < n) sum += nums[R++];
-      if (sum >= s) ans = min(ans, R - L);
-      sum -= nums[L];
+  int minSubArrayLen(int s, vector<int>& nums) {
+    int n = nums.size(), L = -1, sum = 0, ans = INT_MAX;
+    for (int R = 0; R < n; ++R) {
+      /*
+       * Once a certain L can be paired with our current R,
+       *   we don't need to consider pairing this L for any future R' > R
+       *   because they won't produce any shorter subarray.
+       */
+      sum += nums[R];
+      while (L < R && sum >= s) {
+        ans = min(ans, R - L);
+        sum -= nums[++L];
+      }
     }
+
     if (ans == INT_MAX) return 0;
     return ans;
   }
