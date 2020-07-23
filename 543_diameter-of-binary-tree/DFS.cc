@@ -1,6 +1,11 @@
 class Solution {
  public:
-  /* time: O(n), space: O(n), where n = # of nodes */
+  /*
+   * time: O(n), space: O(n), where n = # of nodes
+   *
+   * See also:
+   *   1522. Diameter of N-Ary Tree
+   */
   int diameterOfBinaryTree(const TreeNode* root) {
     int ans = 0;
     auto dfs = [&](const auto& dfs, const TreeNode* x) -> int {
