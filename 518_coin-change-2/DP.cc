@@ -16,9 +16,8 @@ class Solution {
     vector<int> dp(amount + 1);
     dp[0] = 1;
     for (int coin : coins) {
-      for (int sum = 0; sum <= amount; ++sum) {
+      for (int sum = 0; sum <= amount; ++sum)
         if (sum - coin >= 0) dp[sum] += dp[sum - coin];
-      }
     }
     return dp[amount];
   }
