@@ -3,6 +3,9 @@ class Solution {
   /*
    * Expand Around Center
    * time: O(n^2), space: O(1), where n = s.size()
+   *
+   * See also:
+   *   647. Palindromic Substrings
    */
   string longestPalindrome(const string& s) {
     /*
