@@ -3,6 +3,9 @@ class Solution {
   /*
    * Manacher's algorithm
    * time: O(n), space: O(n), where n = s.size()
+   *
+   * See also:
+   *   647. Palindromic Substrings
    */
   string longestPalindrome(const string& s) {
     /*
